@@ -12,4 +12,6 @@ class Connector < ApplicationRecord
 
   has_many :models, dependent: :nullify
   has_many :catalog, dependent: :nullify
+
+  # TODO: - Validate configuration using JSON schema
 end
