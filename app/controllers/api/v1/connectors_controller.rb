@@ -4,8 +4,7 @@ module Api
   module V1
     class ConnectorsController < ApplicationController
       include Connectors
-
-      before_action :set_connector, only: %i[show update]
+      before_action :set_connector, only: %i[show update destroy]
 
       def index
         @connectors = current_workspace
@@ -40,6 +39,11 @@ module Api
           render json: { errors: result.errors },
                  status: :unprocessable_entity
         end
+      end
+
+      def destroy
+        @connector.destroy!
+        head :no_content
       end
 
       private
