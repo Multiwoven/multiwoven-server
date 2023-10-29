@@ -8,10 +8,11 @@ module Connectors
       connector = context.workspace
                          .connectors
                          .create(context.connector_params)
+
       if connector.persisted?
         context.connector = connector
       else
-        context.fail!(errros: connector.errors)
+        context.fail!(errors: connector.errors)
       end
     end
   end

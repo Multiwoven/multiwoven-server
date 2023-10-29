@@ -16,6 +16,7 @@ Rails.application.routes.draw do
 
       # Workspace Routes
       resources :workspaces
+      resources :connectors
     end
   end
 
