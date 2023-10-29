@@ -48,6 +48,9 @@ module Api
         head :no_content
       end
 
+      # TODO: Sync trigger API
+      # def trigger; end
+
       private
 
       def set_sync

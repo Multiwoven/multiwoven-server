@@ -46,6 +46,9 @@ module Api
         head :no_content
       end
 
+      # TODO: connector config API
+      # def config; end
+
       private
 
       def set_connector
