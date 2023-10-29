@@ -5,12 +5,14 @@ module Api
     class ConnectorsController < ApplicationController
       include Connectors
 
-      before_action :set_connector, only: %i[update]
+      before_action :set_connector, only: %i[show update]
 
       def index
         @connectors = current_workspace
                       .connectors.all.page(params[:page] || 1)
       end
+
+      def show; end
 
       def create
         result = CreateConnector.call(
@@ -44,6 +46,8 @@ module Api
 
       def set_connector
         @connector = current_workspace.connectors.find(params[:id])
+      rescue ActiveRecord::RecordNotFound => e
+        render json: { error: e.message }, status: :not_found
       end
 
       def connector_params
