@@ -35,6 +35,8 @@ group :development, :test do
   gem "faker"
   gem "rspec-rails"
   gem "shoulda-matchers", "~> 5.0"
+  gem "simplecov", require: false
+  gem "simplecov_json_formatter", require: false
 end
 
 # Development Environment

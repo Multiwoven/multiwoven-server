@@ -1,6 +1,8 @@
 # ControlPlane
 
+[![Rails CI](https://github.com/Multiwoven/control-plane/actions/workflows/ci.yml/badge.svg)](https://github.com/Multiwoven/control-plane/actions/workflows/ci.yml)
 [![Maintainability](https://api.codeclimate.com/v1/badges/5d2521efe20af922cdda/maintainability)](https://codeclimate.com/repos/6533b99263f9fc1066cba954/maintainability)
+[![Test Coverage](https://api.codeclimate.com/v1/badges/5d2521efe20af922cdda/test_coverage)](https://codeclimate.com/repos/6533b99263f9fc1066cba954/test_coverage)
 
 ## Introduction
 
@@ -43,6 +45,9 @@ touch .env
 
 ```env
 RAILS_MASTER_KEY=your_secret_key_here
+DB_HOST=your_postgres_host
+DB_USERNAME=your_postgres_username
+DB_PASSWORD=your_postgres_password
 ```
 
 Save and close the file.
@@ -59,11 +64,6 @@ Execute the following command to build the Docker image for all services:
 
 **Development:**
 ```bash
-docker-compose -f docker-compose.dev.yml build
-```
-
-**Production:**
-```bash
 docker-compose build
 ```
 
@@ -72,11 +72,6 @@ docker-compose build
 Run the following command to start all services:
 
 For running **development** build:
-```bash
-docker-compose -f docker-compose.dev.yml up
-```
-
-For running **production** production build:
 ```bash
 docker-compose up
 ```
