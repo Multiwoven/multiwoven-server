@@ -16,6 +16,7 @@ gem "rails", "~> 7.1.1"  # Core Rails gem
 # API Support
 gem "jbuilder"
 gem "jwt"
+gem "kaminari"
 gem "rack-cors"
 gem "rswag"
 

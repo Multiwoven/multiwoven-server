@@ -7,6 +7,11 @@ module Api
 
       before_action :set_connector, only: %i[update]
 
+      def index
+        @connectors = current_workspace
+                      .connectors.all.page(params[:page] || 1)
+      end
+
       def create
         result = CreateConnector.call(
           workspace: current_workspace,
