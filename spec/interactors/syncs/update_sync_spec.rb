@@ -2,24 +2,23 @@
 
 require "rails_helper"
 
-RSpec.describe Syncs::CreateSync do
+RSpec.describe Syncs::UpdateSync do
   let(:workspace) { create(:workspace) }
   let(:source) { create(:connector, workspace:) }
   let(:destination) { create(:connector, workspace:) }
   let(:model) { create(:model, workspace:, connector: source) }
-  let(:sync) { build(:sync, workspace:, source:, destination:, model:) }
+  let(:sync) { create(:sync, status: 0, workspace:, source:, destination:, model:) }
 
   context "with valid params" do
-    it "creates a sync" do
+    it "updates sync" do
+      expect(sync.status).to eql("healthy")
       result = described_class.call(
-        workspace:,
-        sync_params: sync.attributes.except("id", "created_at", "updated_at")
+        sync:,
+        sync_params: { status: 1 }
       )
       expect(result.success?).to eq(true)
       expect(result.sync.persisted?).to eql(true)
-      expect(result.sync.source_id).to eql(source.id)
-      expect(result.sync.destination_id).to eql(destination.id)
-      expect(result.sync.model_id).to eql(model.id)
+      expect(result.sync.status).to eql("failed")
     end
   end
 
@@ -28,8 +27,8 @@ RSpec.describe Syncs::CreateSync do
       { source_id: nil }
     end
 
-    it "fails to create sync" do
-      result = described_class.call(workspace:, sync_params:)
+    it "fails to update sync" do
+      result = described_class.call(sync:, sync_params:)
       expect(result.failure?).to eq(true)
     end
   end
