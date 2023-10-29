@@ -7,6 +7,8 @@ class Connector < ApplicationRecord
   validates :configuration, presence: true
   validates :name, presence: true
 
+  enum :connector_type, %i[source destination]
+
   belongs_to :workspace
   belongs_to :connector_definition
 
