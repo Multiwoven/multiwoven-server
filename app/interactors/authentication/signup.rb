@@ -8,6 +8,7 @@ module Authentication
       create_new_user
       assign_confirmation_code
       save_user
+      send_confirmation_email
     end
 
     private
@@ -32,6 +33,10 @@ module Authentication
       else
         context.fail!(errors: user.errors.full_messages)
       end
+    end
+
+    def send_confirmation_email
+      UserMailer.send_confirmation_code(user).deliver_now
     end
 
     def generate_confirmation_code
