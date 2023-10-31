@@ -7,7 +7,7 @@ module Api
       before_action :authenticate_user!, only: [:logout]
 
       def login
-        result = Login.call(params: params)
+        result = Login.call(params:)
         if result.success?
           render json: { token: result.token }, status: :ok
         else
@@ -16,7 +16,7 @@ module Api
       end
 
       def signup
-        result = Signup.call(params: params)
+        result = Signup.call(params:)
         if result.success?
           render json: { message: result.message }, status: :created
         else
@@ -25,7 +25,7 @@ module Api
       end
 
       def logout
-        result = Logout.call(current_user: current_user)
+        result = Logout.call(current_user:)
         if result.success?
           render json: { message: result.message }, status: :ok
         else

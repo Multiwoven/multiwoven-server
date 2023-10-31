@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 # app/interactors/authentication/login.rb
 module Authentication
   class Login
@@ -6,9 +8,7 @@ module Authentication
     def call
       user = User.find_by(email: context.params[:email])
 
-      unless user&.valid_password?(context.params[:password])
-        context.fail!(error: "Invalid email or password")
-      end
+      context.fail!(error: "Invalid email or password") unless user&.valid_password?(context.params[:password])
 
       token, payload = Warden::JWTAuth::UserEncoder.new.call(user, :user, nil)
       user.update!(jti: payload["jti"])
