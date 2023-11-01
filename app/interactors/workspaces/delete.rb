@@ -1,12 +1,15 @@
-# app/interactors/workspaces/delete.rb
 module Workspaces
-    class Delete
-      include Interactor
-  
-      def call
-        workspace = context.user.workspaces.find(context.id)
-        workspace.destroy
+  class Delete
+    include Interactor
+
+    def call
+      workspace = context.user.workspaces.find_by(id: context.id)
+
+      if workspace.present?
+        workspace.destroy!
+      else
+        context.fail!(errors: ["Workspace not found"])
       end
     end
   end
-  
+end
