@@ -40,7 +40,6 @@ group :development, :test do
   gem "shoulda-matchers", "~> 5.0"
   gem "simplecov", require: false
   gem "simplecov_json_formatter", require: false
-  gem 'database_cleaner-active_record'
 end
 
 # Development Environment

@@ -4,30 +4,6 @@ info:
   title: Management API
   version: v1
 paths:
-  "/api/v1/login":
-    post:
-      summary: Logs in a user
-      tags:
-      - Authentication
-      parameters: []
-      responses:
-        '200':
-          description: User logged in
-        '401':
-          description: Invalid credentials
-      requestBody:
-        content:
-          application/json:
-            schema:
-              type: object
-              properties:
-                email:
-                  type: string
-                password:
-                  type: string
-              required:
-              - email
-              - password
   "/api/v1/workspaces":
     get:
       summary: Lists all workspaces
@@ -38,6 +14,65 @@ paths:
       responses:
         '200':
           description: Workspaces retrieved
+    post:
+      summary: Creates a workspace
+      tags:
+      - Workspaces
+      security:
+      - bearerAuth: []
+      parameters: []
+      responses:
+        '201':
+          description: Workspace created
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                name:
+                  type: string
+              required:
+              - name
+  "/api/v1/workspaces/{id}":
+    put:
+      summary: Updates a workspace
+      tags:
+      - Workspaces
+      security:
+      - bearerAuth: []
+      parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: integer
+      responses:
+        '200':
+          description: Workspace updated
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                name:
+                  type: string
+    delete:
+      summary: Deletes a workspace
+      tags:
+      - Workspaces
+      security:
+      - bearerAuth: []
+      parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: integer
+      responses:
+        '204':
+          description: Workspace deleted
 servers:
 - url: http://localhost:3000
 components:
