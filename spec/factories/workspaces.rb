@@ -8,7 +8,7 @@ FactoryBot.define do
     api_key { Faker::Config.random }
 
     after(:create) do |workspace|
-      create(:workspace_user, workspace: workspace, user: create(:user))
+      create(:workspace_user, workspace:, user: create(:user))
     end
   end
 end

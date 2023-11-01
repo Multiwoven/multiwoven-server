@@ -1,8 +1,10 @@
+# frozen_string_literal: true
+
 # app/controllers/api/v1/workspaces_controller.rb
 module Api
   module V1
     class WorkspacesController < ApplicationController
-    include Workspaces
+      include Workspaces
 
       def index
         result = ListAll.call(user: current_user)
@@ -10,7 +12,7 @@ module Api
       end
 
       def create
-        result = Create.call(user: current_user, workspace_params: workspace_params)
+        result = Create.call(user: current_user, workspace_params:)
         if result.success?
           @workspace = result.workspace
           render :show, status: :created
@@ -20,7 +22,7 @@ module Api
       end
 
       def update
-        result = Update.call(id: params[:id], user: current_user, workspace_params: workspace_params)
+        result = Update.call(id: params[:id], user: current_user, workspace_params:)
         if result.success?
           @workspace = result.workspace
           render :show, status: :ok
@@ -31,13 +33,13 @@ module Api
 
       def destroy
         result = Workspaces::Delete.call(id: params[:id], user: current_user)
-      
+
         if result.success?
           head :no_content
         else
           render json: { errors: result.errors }, status: :unprocessable_entity
         end
-      end      
+      end
 
       private
 

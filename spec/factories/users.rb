@@ -10,4 +10,3 @@ FactoryBot.define do
     # Add other fields here as required for your model
   end
 end
-

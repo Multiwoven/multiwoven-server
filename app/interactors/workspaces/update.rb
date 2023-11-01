@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 # app/interactors/workspaces/update.rb
 
 module Workspaces
@@ -6,7 +8,7 @@ module Workspaces
 
     def call
       workspace = Workspace.find_by(id: context.id)
-      if workspace && workspace.update(context.workspace_params)
+      if workspace&.update(context.workspace_params)
         context.workspace = workspace
       else
         context.fail!(errors: workspace&.errors&.full_messages || ["Couldn't find Workspace"])

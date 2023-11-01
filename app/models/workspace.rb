@@ -31,6 +31,7 @@ class Workspace < ApplicationRecord
 
   before_validation :generate_slug_and_status, on: :create
   before_update :update_slug, if: :name_changed?
+
   private
 
   def generate_slug_and_status
