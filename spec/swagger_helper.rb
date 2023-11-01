@@ -18,19 +18,26 @@ RSpec.configure do |config|
     "v1/swagger.yaml" => {
       openapi: "3.0.1",
       info: {
-        title: "API V1",
+        title: "Management API",
         version: "v1"
       },
       paths: {},
       servers: [
         {
-          url: "https://{defaultHost}",
-          variables: {
-            defaultHost: {
-              default: "https://api.multiwoven.com"
-            }
+          url: "http://localhost:3000"
+        }
+      ],
+      components: {
+        securitySchemes: {
+          bearerAuth: {
+            type: :http,
+            scheme: "bearer",
+            bearerFormat: "JWT" # This is optional, use only if you use JWT for tokens.
           }
         }
+      },
+      security: [
+        bearerAuth: []
       ]
     }
   }

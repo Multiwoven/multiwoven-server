@@ -30,9 +30,14 @@ module Api
       end
 
       def destroy
-        Delete.call(id: params[:id], user: current_user)
-        head :no_content
-      end
+        result = Workspaces::Delete.call(id: params[:id], user: current_user)
+      
+        if result.success?
+          head :no_content
+        else
+          render json: { errors: result.errors }, status: :unprocessable_entity
+        end
+      end      
 
       private
 

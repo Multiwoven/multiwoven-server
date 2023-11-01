@@ -1,7 +1,7 @@
 ---
 openapi: 3.0.1
 info:
-  title: API V1
+  title: Management API
   version: v1
 paths:
   "/api/v1/login":
@@ -28,8 +28,23 @@ paths:
               required:
               - email
               - password
+  "/api/v1/workspaces":
+    get:
+      summary: Lists all workspaces
+      tags:
+      - Workspaces
+      security:
+      - bearerAuth: []
+      responses:
+        '200':
+          description: Workspaces retrieved
 servers:
-- url: https://{defaultHost}
-  variables:
-    defaultHost:
-      default: www.example.com
+- url: http://localhost:3000
+components:
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+security:
+- bearerAuth: []
