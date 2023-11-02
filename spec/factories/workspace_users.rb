@@ -9,4 +9,3 @@ FactoryBot.define do
     role { %w[admin member].sample }
   end
 end
-

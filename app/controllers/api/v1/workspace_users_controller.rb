@@ -12,7 +12,8 @@ module Api
         result = Create.call(workspace: @workspace, user_params: workspace_user_params)
 
         if result.success?
-          render json: { message: "User added to workspace." }, status: :created
+          @workspace_user = result.workspace_user
+          render :create, status: :created
         else
           render json: { errors: result.errors }, status: :unprocessable_entity
         end
@@ -21,8 +22,7 @@ module Api
       # GET /api/v1/workspaces/:workspace_id/workspace_users
       def index
         result = List.call(workspace: @workspace)
-
-        render json: result.workspace_users
+        @workspace_users = result.workspace_users
       end
 
       # PUT /api/v1/workspaces/:workspace_id/workspace_users/:id
@@ -30,7 +30,8 @@ module Api
         result = Update.call(id: params[:id], role: params[:role])
 
         if result.success?
-          render json: { message: "User role updated." }, status: :ok
+          @workspace_user = result.workspace_user
+          render :update, status: :ok
         else
           render json: { errors: result.errors }, status: :unprocessable_entity
         end
