@@ -4,8 +4,9 @@
 
 FactoryBot.define do
   factory :workspace_user do
-    workspace
-    user
-    role { "admin" }
+    association :user
+    association :workspace
+    role { %w[admin member viewer].sample }
   end
 end
+
