@@ -7,7 +7,7 @@ RSpec.describe WorkspaceUsers::Update, type: :interactor do
     subject(:result) { described_class.call(id: workspace_user.id, role: new_role) }
 
     context 'when given valid parameters' do
-      let(:new_role) { 'member' } # Assuming 'admin' is a valid role, adjust accordingly.
+      let(:new_role) { 'viewer' } # Assuming 'admin' is a valid role, adjust accordingly.
 
       it 'succeeds' do
         expect(result).to be_success
