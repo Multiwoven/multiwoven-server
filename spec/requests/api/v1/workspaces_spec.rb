@@ -39,7 +39,13 @@ RSpec.describe "API::V1::Workspaces", type: :request do
       parameter name: :workspace, in: :body, schema: {
         type: :object,
         properties: {
-          name: { type: :string }
+          workspace: {
+            type: :object,
+            properties: {
+              name: { type: :string }
+            },
+            required: ["name"]
+          }
         },
         required: ["name"]
       }
@@ -64,7 +70,12 @@ RSpec.describe "API::V1::Workspaces", type: :request do
       parameter name: :workspace, in: :body, schema: {
         type: :object,
         properties: {
-          name: { type: :string }
+          workspace: {
+            type: :object,
+            properties: {
+              name: { type: :string }
+            }
+          }
         }
       }
 

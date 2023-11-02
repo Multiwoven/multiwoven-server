@@ -115,8 +115,13 @@ paths:
             schema:
               type: object
               properties:
-                name:
-                  type: string
+                workspace:
+                  type: object
+                  properties:
+                    name:
+                      type: string
+                  required:
+                  - name
               required:
               - name
   "/api/v1/workspaces/{id}":
@@ -141,8 +146,11 @@ paths:
             schema:
               type: object
               properties:
-                name:
-                  type: string
+                workspace:
+                  type: object
+                  properties:
+                    name:
+                      type: string
     delete:
       summary: Deletes a workspace
       tags:
