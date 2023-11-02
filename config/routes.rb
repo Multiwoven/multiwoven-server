@@ -17,7 +17,9 @@ Rails.application.routes.draw do
       post 'reset_password', to: 'auth#reset_password'
 
       # Workspace Routes
-      resources :workspaces
+      resources :workspaces do
+        resources :workspace_users, only: [:create, :index, :update, :destroy]
+      end
       resources :connectors
       resources :models
       resources :syncs
