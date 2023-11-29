@@ -1,5 +1,7 @@
 # frozen_string_literal: true
 
+# TODO: move to partial
+
 json.id @workspace.id
 json.name @workspace.name
 json.slug @workspace.slug

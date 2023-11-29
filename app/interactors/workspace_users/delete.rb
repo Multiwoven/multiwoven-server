@@ -5,6 +5,7 @@ module WorkspaceUsers
     include Interactor
 
     def call
+      # TODO: Add user scope for workspace user
       workspace_user = WorkspaceUser.find_by(id: context.id)
 
       return if workspace_user&.destroy

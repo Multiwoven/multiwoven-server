@@ -3,6 +3,7 @@
 # app/views/api/v1/workspace_users/create.json.jbuilder
 
 json.workspace_user do
+  # TODO: move to partial
   json.id @workspace_user.id
   json.user_id @workspace_user.user_id
   json.workspace_id @workspace_user.workspace_id

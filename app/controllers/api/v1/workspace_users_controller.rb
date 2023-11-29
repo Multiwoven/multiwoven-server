@@ -51,12 +51,12 @@ module Api
       private
 
       def set_workspace
-        @workspace = Workspace.find(params[:workspace_id])
+        @workspace = current_user.workspaces.find(params[:workspace_id])
       end
 
       def authorize_admin!
-        workspace_user = WorkspaceUser.find_by(workspace: @workspace, user: current_user)
-        return if workspace_user&.role == "admin"
+        workspace_user = current_user.workspace_users.find_by(workspace: @workspace)
+        return if workspace_user.admin?
 
         render json: { error: "Unauthorized" }, status: :unauthorized
       end

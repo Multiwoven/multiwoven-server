@@ -1,6 +1,8 @@
 # frozen_string_literal: true
 
 json.array! @workspaces do |workspace|
+  # TODO: move to partial
+
   json.id workspace.id
   json.name workspace.name
   json.slug workspace.slug
