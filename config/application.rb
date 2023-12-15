@@ -44,15 +44,15 @@ module ControlPlane
     # email setup
     config.action_mailer.raise_delivery_errors = true
     config.action_mailer.delivery_method = :smtp
-    host = 'multiwoven.com'
+    host = ENV.fetch('SMTP_HOST', 'multiwoven.com') # Replace 'multiwoven.com' with SMTP_HOST value if needed
     config.action_mailer.default_url_options = { host: host }
     config.x.mail_from = %("Multiwoven" <noreply@multiwoven.com>)
     ActionMailer::Base.smtp_settings = {
-      :address => Rails.application.credentials.secrets.smtp_address,
-      :port => '587',
-      :authentication => :plain,
-      :user_name => Rails.application.credentials.secrets.smtp_username,
-      :password => Rails.application.credentials.secrets.smtp_password,
+      address: ENV['SMTP_ADDRESS'],
+      port: ENV.fetch('SMTP_PORT', '587'), # '587' is the default value if SMTP_PORT is not set
+      authentication: :plain,
+      user_name: ENV['SMTP_USERNAME'],
+      password: ENV['SMTP_PASSWORD'],
     }
   end
 end
