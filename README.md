@@ -1,4 +1,9 @@
 # Multiwoven Server
+[![AGPL License](https://img.shields.io/badge/license-AGPL-blue.svg)](https://github.com/Multiwoven/multiwoven-server/blob/main/LICENSE)
+[![CI](https://github.com/Multiwoven/multiwoven-server/actions/workflows/ci.yml/badge.svg)](https://github.com/Multiwoven/multiwoven-server/actions/workflows/ci.yml)
+[![Docker Build](https://github.com/Multiwoven/multiwoven-server/actions/workflows/docker-build.yml/badge.svg)](https://github.com/Multiwoven/multiwoven-server/actions/workflows/docker-build.yml)
+[![Maintainability](https://api.codeclimate.com/v1/badges/5f5a5f94f8c86a1fb02b/maintainability)](https://codeclimate.com/repos/657bb07835753500df74ff6a/maintainability)
+[![Test Coverage](https://api.codeclimate.com/v1/badges/5f5a5f94f8c86a1fb02b/test_coverage)](https://codeclimate.com/repos/657bb07835753500df74ff6a/test_coverage)
 
 ## Introduction
 
