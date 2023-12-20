@@ -38,6 +38,3 @@ lib/tasks/*.rake
 
 # macOS system files
 .DS_Store
-
-# Ignore rswag files
-swagger/.DS_Store

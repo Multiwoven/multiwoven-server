@@ -2,7 +2,7 @@
 
 require "rails_helper"
 
-RSpec.describe "Api::V1::Connectors", type: :request do
+RSpec.describe "V1::Syncs", type: :request do
   describe "GET /index" do
     pending "add some examples (or delete) #{__FILE__}"
   end
