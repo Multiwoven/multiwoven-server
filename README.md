@@ -6,13 +6,15 @@
 [![Maintainability](https://api.codeclimate.com/v1/badges/5f5a5f94f8c86a1fb02b/maintainability)](https://codeclimate.com/repos/657bb07835753500df74ff6a/maintainability)
 [![Test Coverage](https://api.codeclimate.com/v1/badges/5f5a5f94f8c86a1fb02b/test_coverage)](https://codeclimate.com/repos/657bb07835753500df74ff6a/test_coverage)
 
-
 Welcome to the **Multiwoven Server**  repository! This backend component powers the Multiwoven app, providing a suite of APIs and encompassing the worker logic, business logic, and state management needed for the app's functionality.
-## Technology Stack 
+
+## Technology Stack
+
 - **Backend** : Ruby on Rails 
 - **Database** : PostgreSQL, Redis 
 - **Containerization** : Docker 
 - **CI/CD** : GitHub Actions
+
 ## Local Deployment
 ### System Requirements
 
@@ -96,15 +98,13 @@ docker run -p 3000:3000 multiwoven-server
 
 Adjust the port mappings and other runtime parameters as needed for your environment.
 
-### Deploying on Containerized Platforms
+### Resources
 
-This Docker image can be deployed on various containerized platforms of your choice, such as: 
-- **Kubernetes** : Utilize a Kubernetes cluster to orchestrate and manage your Docker containers. This is ideal for scalable, distributed systems. 
-- **Amazon ECS** : Leverage AWS Elastic Container Service (ECS) for a managed container orchestration service, simplifying deployment and scalability. 
-- **Google Cloud Run** : Deploy on Google Cloud Run for a serverless approach, ideal for applications with variable traffic. 
-- **Azure Container Instances** : Use Azure Container Instances for quick and easy container deployments in the Azure cloud environment.
+* [Documentation](https://docs.multiwoven.com)
+* [API Reference](https://www.docs.multiwoven.com/api)
 
-When deploying, consider the platform's specific configurations, such as service definitions, load balancing, and auto-scaling to ensure optimal performance and reliability.
+### ⚠️ Development Status: Under Active Development
+This project is under active development, As we work towards stabilizing and enhancing the project, you might encounter some bugs or incomplete features. We greatly value your contributions and patience during this phase. If you find any issues not already listed, please feel free to open a new issue with detailed information. Your feedback is crucial in helping us improve. Thank you for your support!
 
 ## License
 
