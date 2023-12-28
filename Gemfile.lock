@@ -1,3 +1,24 @@
+GIT
+  remote: git@github.com:Multiwoven/multiwoven-integrations.git
+  revision: a9c17d5b0c9b25ff893f515ebc3742706a14657a
+  branch: error_handling
+  specs:
+    multiwoven-integrations (0.1.0)
+      activesupport
+      dry-schema
+      dry-struct
+      dry-types
+      pg
+      rake
+      ruby-odbc (~> 0.999992)
+      sequel
+
+GIT
+  remote: https://github.com/Multiwoven/ruby-odbc.git
+  revision: d8dea99fe03cfa88335d2f0686398b2a5881ff8c
+  specs:
+    ruby-odbc (0.999992)
+
 GEM
   remote: https://rubygems.org/
   specs:
@@ -1553,6 +1574,31 @@ GEM
     dry-core (1.0.1)
       concurrent-ruby (~> 1.0)
       zeitwerk (~> 2.6)
+    dry-inflector (1.0.0)
+    dry-initializer (3.1.1)
+    dry-logic (1.5.0)
+      concurrent-ruby (~> 1.0)
+      dry-core (~> 1.0, < 2)
+      zeitwerk (~> 2.6)
+    dry-schema (1.13.3)
+      concurrent-ruby (~> 1.0)
+      dry-configurable (~> 1.0, >= 1.0.1)
+      dry-core (~> 1.0, < 2)
+      dry-initializer (~> 3.0)
+      dry-logic (>= 1.4, < 2)
+      dry-types (>= 1.7, < 2)
+      zeitwerk (~> 2.6)
+    dry-struct (1.6.0)
+      dry-core (~> 1.0, < 2)
+      dry-types (>= 1.7, < 2)
+      ice_nine (~> 0.11)
+      zeitwerk (~> 2.6)
+    dry-types (1.7.1)
+      concurrent-ruby (~> 1.0)
+      dry-core (~> 1.0)
+      dry-inflector (~> 1.0)
+      dry-logic (~> 1.4)
+      zeitwerk (~> 2.6)
     erubi (1.12.0)
     factory_bot (6.2.1)
       activesupport (>= 5.0.0)
@@ -1565,6 +1611,7 @@ GEM
       activesupport (>= 6.1)
     i18n (1.14.1)
       concurrent-ruby (~> 1.0)
+    ice_nine (0.11.2)
     interactor (3.1.2)
     io-console (0.6.0)
     irb (1.8.3)
@@ -1739,6 +1786,8 @@ GEM
       rubocop (>= 1.33.0, < 2.0)
     ruby-progressbar (1.13.0)
     ruby2_keywords (0.0.5)
+    sequel (5.75.0)
+      bigdecimal
     shoulda-matchers (5.3.0)
       activesupport (>= 5.2.0)
     simplecov (0.22.0)
@@ -1788,6 +1837,7 @@ DEPENDENCIES
   jbuilder
   jwt
   kaminari
+  multiwoven-integrations!
   pg (~> 1.1)
   puma (>= 5.0)
   rack-cors
@@ -1801,6 +1851,7 @@ DEPENDENCIES
   rubocop
   rubocop-performance
   rubocop-rails
+  ruby-odbc!
   shoulda-matchers (~> 5.0)
   simplecov
   simplecov_json_formatter
