@@ -59,7 +59,6 @@ module Api
 
       def connector_params
         params.require(:connector).permit(:workspace_id,
-                                          :connector_definition_id,
                                           :connector_type, :name,
                                           configuration: {})
       end

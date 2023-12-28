@@ -30,7 +30,7 @@ gem "tzinfo-data", platforms: %i[windows jruby] # Timezone data
 
 # Debugging
 group :development, :test do
-  gem "debug", platforms: %i[mri windows] # Debugging tool
+  gem "byebug", platforms: %i[mri windows] # Debugging tool
   gem "factory_bot_rails"
   gem "faker"
   gem "rspec-rails"
