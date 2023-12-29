@@ -20,7 +20,7 @@ module Api
         if result.success?
           render json: { message: result.message }, status: :created
         else
-          render json: { errors: result.message }, status: :unprocessable_entity
+          render json: { errors: format_signup_errors(result.errors) }, status: :unprocessable_entity
         end
       end
 
@@ -63,6 +63,18 @@ module Api
         else
           render json: { error: "Invalid confirmation code." }, status: :unprocessable_entity
         end
+      end
+
+      private
+
+      def format_signup_errors(errors)
+        formatted_errors = {}
+        errors.each do |error_message|
+          field, message = error_message.split(" ", 2)
+          field = field.strip.to_sym if field
+          formatted_errors[field] = message if field
+        end
+        formatted_errors
       end
     end
   end

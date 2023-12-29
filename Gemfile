@@ -47,6 +47,7 @@ group :development do
   # Add development-only gems here. For example:
   # gem "spring"  # Speeds up Rails commands
   gem "awesome_print"
+  gem "byebug"
   gem "rubocop", require: false
   gem "rubocop-performance", require: false
   gem "rubocop-rails", require: false
