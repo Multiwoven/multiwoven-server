@@ -26,10 +26,10 @@ class ApplicationController < ActionController::API
   protected
 
   def render_error(message:, status:, code: nil, details: nil)
-    error_response = { success: false, error: { message: message } }
+    error_response = { success: false, error: { message: } }
     error_response[:error][:code] = code if code
     error_response[:error][:details] = details if details
 
-    render json: error_response, status: status
+    render json: error_response, status:
   end
 end

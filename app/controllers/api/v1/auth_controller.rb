@@ -20,7 +20,8 @@ module Api
         if result.success?
           render json: { message: result.message }, status: :created
         else
-          render_error(message: "Signup failed", status: :unprocessable_entity, details: format_signup_errors(result.errors))
+          render_error(message: "Signup failed", status: :unprocessable_entity,
+                       details: format_signup_errors(result.errors))
         end
       end
 
@@ -66,6 +67,7 @@ module Api
       end
 
       private
+
       def format_signup_errors(errors)
         formatted_errors = {}
         errors.each do |error_message|
