@@ -15,6 +15,7 @@ RSpec.describe User, type: :model do
 
   # Test for validations
   describe "validations" do
+    it { should validate_presence_of(:name) }
     it { should validate_presence_of(:email) }
     # Add other validation tests here
   end
