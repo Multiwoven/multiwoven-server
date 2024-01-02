@@ -12,7 +12,7 @@ gem "interactor", "~> 3.0"
 gem "ruby-odbc", git: "https://github.com/Multiwoven/ruby-odbc.git"
 
 gem "multiwoven-integrations", git: "git@github.com:Multiwoven/multiwoven-integrations.git",
-                               branch: "error_handling"
+                               branch: "file_path2"
 gem "pg", "~> 1.1"       # PostgreSQL Database
 gem "puma", ">= 5.0"     # Web server
 gem "rails", "~> 7.1.1"  # Core Rails gem

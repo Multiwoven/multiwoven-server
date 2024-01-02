@@ -21,6 +21,11 @@ Rails.application.routes.draw do
       resources :connectors
       resources :models
       resources :syncs
+      resources :connector_definitions, only: [:index, :show] do
+        collection do
+          post :check_connection
+        end
+      end
     end
   end
 
