@@ -6,7 +6,13 @@ module Authentication
     include Interactor
 
     def call
-      user = User.find_by(email: context.params[:email])
+      begin
+        user = User.find_by(email: context.params[:email])
+      rescue => e
+        Rails.logger.error("Login Interactor Exception: #{e.message}")
+        context.fail!(error: "An error occurred while finding the user.")
+        return
+      end
 
       # Check if the email is valid and password is correct
       if user&.valid_password?(context.params[:password])

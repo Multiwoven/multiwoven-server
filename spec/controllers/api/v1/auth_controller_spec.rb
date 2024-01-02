@@ -9,7 +9,7 @@ RSpec.describe Api::V1::AuthController, type: :controller do
   end
 
   let(:user_attributes) { attributes_for(:user) }
-  let(:user) { create(:user) }
+  let(:user) { create(:user, :verified) }
 
   describe "POST #signup" do
     context "with valid parameters" do
@@ -143,7 +143,7 @@ RSpec.describe Api::V1::AuthController, type: :controller do
       it 'returns an error' do
         post :resend_verification, params: { email: 'nonexistent@example.com' }
 
-        expect(response).to have_http_status(:not_found)
+        expect(response).to have_http_status(:unprocessable_entity)
         expect(json_response["error"]).to eq("User not found.")
       end
     end
