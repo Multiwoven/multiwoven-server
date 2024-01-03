@@ -18,7 +18,11 @@ Rails.application.routes.draw do
       resources :workspaces do
         resources :workspace_users, only: [:create, :index, :update, :destroy]
       end
-      resources :connectors
+      resources :connectors do
+        member do
+          get :discover
+        end
+      end
       resources :models
       resources :syncs
       resources :connector_definitions, only: [:index, :show] do
