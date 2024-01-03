@@ -15,6 +15,6 @@ RSpec.describe Connector, type: :model do
   context "associations" do
     it { should belong_to(:workspace) }
     it { should have_many(:models).dependent(:nullify) }
-    it { should have_many(:catalog).dependent(:nullify) }
+    it { should have_one(:catalog).dependent(:nullify) }
   end
 end
