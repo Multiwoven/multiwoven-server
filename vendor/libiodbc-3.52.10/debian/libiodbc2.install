@@ -1,3 +1,0 @@
-debian/tmp/usr/lib/libiodbc.so.*
-debian/tmp/usr/lib/libiodbcinst.so.*
-debian/tmp/usr/share/lintian/overrides/libiodbc2
