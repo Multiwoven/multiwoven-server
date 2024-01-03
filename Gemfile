@@ -11,7 +11,7 @@ gem "aws-sdk"
 gem "interactor", "~> 3.0"
 gem "mw-ruby-odbc"
 
-gem 'multiwoven-integrations', '~> 0.1.1'
+gem "multiwoven-integrations", "~> 0.1.1"
 
 gem "pg", "~> 1.1"       # PostgreSQL Database
 gem "puma", ">= 5.0"     # Web server
@@ -46,7 +46,6 @@ end
 group :development do
   # Add development-only gems here. For example:
   # gem "spring"  # Speeds up Rails commands
-  gem "byebug"
   gem "rubocop", require: false
   gem "rubocop-performance", require: false
   gem "rubocop-rails", require: false

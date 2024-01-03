@@ -14,7 +14,7 @@ module Api
         @connector = @connectors.find do |hash|
           hash[:name].downcase == params[:id].downcase
         end
-        render json: (@connector || [])
+        render json: @connector || []
       end
 
       def check_connection
