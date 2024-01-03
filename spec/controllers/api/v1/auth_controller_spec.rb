@@ -128,10 +128,10 @@ RSpec.describe Api::V1::AuthController, type: :controller do
   end
 
   describe "POST #resend_verification" do
-    let(:unverified_user) { create(:user) }  # Assuming this creates an unverified user
+    let(:unverified_user) { create(:user) } # Assuming this creates an unverified user
 
-    context 'resending verification code' do
-      it 'sends a new verification code' do
+    context "resending verification code" do
+      it "sends a new verification code" do
         post :resend_verification, params: { email: unverified_user.email }
 
         expect(response).to have_http_status(:ok)
@@ -139,9 +139,9 @@ RSpec.describe Api::V1::AuthController, type: :controller do
       end
     end
 
-    context 'with non-existent user' do
-      it 'returns an error' do
-        post :resend_verification, params: { email: 'nonexistent@example.com' }
+    context "with non-existent user" do
+      it "returns an error" do
+        post :resend_verification, params: { email: "nonexistent@example.com" }
 
         expect(response).to have_http_status(:unprocessable_entity)
         expect(json_response["error"]).to eq("User not found.")

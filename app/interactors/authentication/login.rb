@@ -8,19 +8,19 @@ module Authentication
     def call
       begin
         user = User.find_by(email: context.params[:email])
-      rescue => e
+      rescue StandardError => e
         Rails.logger.error("Login Interactor Exception: #{e.message}")
         context.fail!(error: "An error occurred while finding the user.")
         return
       end
+      authenticate(user)
+    end
 
-      # Check if the email is valid and password is correct
+    def authenticate(user)
       if user&.valid_password?(context.params[:password])
-        # Check if the user is verified
         if user.verified?
           token, payload = Warden::JWTAuth::UserEncoder.new.call(user, :user, nil)
           user.update!(jti: payload["jti"])
-
           context.token = token
         else
           context.fail!(error: "Account not verified. Please verify your account.")
@@ -31,4 +31,3 @@ module Authentication
     end
   end
 end
-

@@ -4,7 +4,7 @@ require "rails_helper"
 
 RSpec.describe WorkspaceUsers::Create, type: :interactor do
   let(:workspace) { Workspace.new(id: 1) }
-  let(:unique_email) { "user_#{Time.now.to_i}@example.com" }
+  let(:unique_email) { "user_#{Time.zone.now.to_i}@example.com" }
   describe ".call" do
     subject(:result) { described_class.call(workspace:, user_params:) }
 

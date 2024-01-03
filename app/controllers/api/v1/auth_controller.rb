@@ -59,6 +59,7 @@ module Api
         unless params[:email] && params[:confirmation_code]
           return render json: { error: "Missing required parameters" }, status: :bad_request
         end
+
         user = User.find_by(email: params[:email])
 
         if user&.confirmation_code == params[:confirmation_code]
@@ -72,7 +73,7 @@ module Api
       def resend_verification
         result = Authentication::ResendVerificationCode.call(params:)
         if result.success?
-          render json: { message: 'Verification code resent successfully.' }, status: :ok
+          render json: { message: "Verification code resent successfully." }, status: :ok
         else
           render json: { error: result.error || result.errors }, status: :unprocessable_entity
         end
