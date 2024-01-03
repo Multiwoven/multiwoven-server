@@ -5,6 +5,10 @@ require "rails_helper"
 RSpec.describe Connector, type: :model do
   subject { described_class.new }
 
+  before do
+    allow(subject).to receive(:configuration_schema).and_return({}.to_json)
+  end
+
   context "validations" do
     it { should validate_presence_of(:workspace_id) }
     it { should validate_presence_of(:connector_type) }
