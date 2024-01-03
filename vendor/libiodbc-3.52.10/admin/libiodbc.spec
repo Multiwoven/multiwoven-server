@@ -1,0 +1,261 @@
+#
+#  libiodbc.spec
+#
+#  $Id$
+#
+#  RPM specification file to build binary distribution set
+#
+#  The iODBC driver manager.
+#
+#  Copyright (C) 1996-2015 by OpenLink Software <iodbc@openlinksw.com>
+#  All Rights Reserved.
+#
+#  This software is released under the terms of either of the following
+#  licenses:
+#
+#      - GNU Library General Public License (see LICENSE.LGPL)
+#      - The BSD License (see LICENSE.BSD).
+#
+#  Note that the only valid version of the LGPL license as far as this
+#  project is concerned is the original GNU Library General Public License
+#  Version 2, dated June 1991.
+#
+#  While not mandated by the BSD license, any patches you make to the
+#  iODBC source code may be contributed back into the iODBC project
+#  at your discretion. Contributions will benefit the Open Source and
+#  Data Access community as a whole. Submissions may be made at:
+#
+#      http://www.iodbc.org
+#
+#
+#  GNU Library Generic Public License Version 2
+#  ============================================
+#  This library is free software; you can redistribute it and/or
+#  modify it under the terms of the GNU Library General Public
+#  License as published by the Free Software Foundation; only
+#  Version 2 of the License dated June 1991.
+#
+#  This library is distributed in the hope that it will be useful,
+#  but WITHOUT ANY WARRANTY; without even the implied warranty of
+#  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+#  Library General Public License for more details.
+#
+#  You should have received a copy of the GNU Library General Public
+#  License along with this library; if not, write to the Free
+#  Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
+#
+#
+#  The BSD License
+#  ===============
+#  Redistribution and use in source and binary forms, with or without
+#  modification, are permitted provided that the following conditions
+#  are met:
+#
+#  1. Redistributions of source code must retain the above copyright
+#     notice, this list of conditions and the following disclaimer.
+#  2. Redistributions in binary form must reproduce the above copyright
+#     notice, this list of conditions and the following disclaimer in
+#     the documentation and/or other materials provided with the
+#     distribution.
+#  3. Neither the name of OpenLink Software Inc. nor the names of its
+#     contributors may be used to endorse or promote products derived
+#     from this software without specific prior written permission.
+#
+#  THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
+#  "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
+#  LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR
+#  A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL OPENLINK OR
+#  CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL,
+#  EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO,
+#  PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR
+#  PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF
+#  LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING
+#  NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
+#  SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+#
+
+
+# ----------------------------------------------------------------------
+# MACROS AND DEFINES
+# ----------------------------------------------------------------------
+
+#  Disable generation of debug package
+%define debug_package %{nil}
+
+#  Do we want to build the GTK based administrator?
+%define with_admin 1
+
+# on commandline: --define 'noadmin 1'
+%{?noadmin:%define with_admin 0}
+
+# ----------------------------------------------------------------------
+# BASE PACKAGE
+# ----------------------------------------------------------------------
+Name: libiodbc
+Version: 3.52.10
+Release: 1
+Summary: iODBC Driver Manager
+Group: Libraries
+License: LGPL or BSD license (see "LICENSE" file included in distribution)
+URL: http://www.iodbc.org/
+Source: http://www.iodbc.org/downloads/iODBC/libiodbc-%{PACKAGE_VERSION}.tar.gz
+BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root
+
+%description
+The iODBC Driver Manager is a free implementation of the SAG CLI and
+ODBC compliant driver manager which allows developers to write ODBC
+compliant applications that can connect to various databases using
+appropriate backend drivers.
+
+The iODBC Driver Manager was originally created by Ke Jin and is
+currently maintained by OpenLink Software under a LGPL or BSD license
+(see "LICENSE" file included in the distribution).
+
+%package devel
+Summary: header files and libraries for iODBC development
+Group: Development/Libraries
+Requires: libiodbc
+
+%description devel
+The iODBC Driver Manager is a free implementation of the SAG CLI and
+ODBC compliant driver manager which allows developers to write ODBC
+compliant applications that can connect to various databases using
+appropriate backend drivers.
+
+This package contains the header files and libraries needed to develop
+program that use the driver manager.
+
+The iODBC Driver Manager was originally created by Ke Jin and is 
+currently maintained by OpenLink Software under a LGPL or BSD license
+(see "LICENSE" file included in the distribution).
+
+%if %{with_admin}
+%package admin
+Summary: GTK based administrator for iODBC development
+Group: Development/Libraries
+Requires: libiodbc 
+
+%description admin
+The iODBC Driver Manager is a free implementation of the SAG CLI and
+ODBC compliant driver manager which allows developers to write ODBC
+compliant applications that can connect to various databases using
+appropriate backend drivers.
+
+This package contains a GTK based administrator program for maintaining
+DSN information in odbc.ini and odbcinst.ini files.
+
+The iODBC Driver Manager was originally created by Ke Jin and is
+currently maintained by OpenLink Software under a LGPL or BSD license
+(see "LICENSE" file included in the distribution).
+%endif
+
+%prep
+%setup
+%build
+
+#
+#  Configure the package
+#
+%if %{with_admin}
+%configure --enable-odbc3 --with-iodbc-inidir=/etc --enable-pthreads --disable-libodbc
+%else
+%configure --enable-odbc3 --with-iodbc-inidir=/etc --enable-pthreads --disable-libodbc --disable-gui
+%endif
+
+#
+#  Build the packages
+#
+make
+
+%install
+#
+#  Carefully clean the build tree before use
+#
+[ "$RPM_BUILD_ROOT" != "/" ] && rm -rf $RPM_BUILD_ROOT
+
+#
+#  Make sure we can find the necessary libraries
+#
+LIBRARY_PATH=$RPM_BUILD_ROOT/%{_libdir}
+export LIBRARY_PATH
+
+#
+#  Install binaries, include files and libraries
+#
+%makeinstall
+
+#
+#  Install the sample odbc.ini and odbcinst.ini files
+#
+mkdir -p $RPM_BUILD_ROOT/etc
+#install -m644 etc/odbc.ini.sample $RPM_BUILD_ROOT/etc/odbc.ini
+#install -m644 etc/odbcinst.ini.sample $RPM_BUILD_ROOT/etc/odbcinst.ini
+
+%clean
+#
+#  Carefully clean the build tree
+#
+[ "$RPM_BUILD_ROOT" != "/" ] && rm -rf $RPM_BUILD_ROOT
+
+%post -p /sbin/ldconfig
+%postun -p /sbin/ldconfig
+
+%files 
+%attr(0755, root, root) %{_bindir}/iodbctest
+%attr(0755, root, root) %{_bindir}/iodbctestw
+%attr(0755, root, root) %{_libdir}/libiodbc.so.*
+%attr(0755, root, root) %{_libdir}/libiodbcinst.so.*
+%attr(0644, root, root) %{_mandir}/man1/iodbctest.1*
+%attr(0644, root, root) %{_mandir}/man1/iodbctestw.1*
+#%attr(0644, root, root) %config /etc/odbc.ini
+#%attr(0644, root, root) %config /etc/odbcinst.ini
+
+
+%files devel
+%defattr(-,root,root)
+%attr(0644, root, root) %doc AUTHORS 
+%attr(0644, root, root) %doc LICENSE
+%attr(0644, root, root) %doc LICENSE.LGPL
+%attr(0644, root, root) %doc LICENSE.BSD
+%attr(0644, root, root) %doc ChangeLog 
+%attr(0644, root, root) %doc NEWS 
+%attr(0644, root, root) %doc README
+%attr(0644, root, root) %doc README.CVS
+%attr(0644, root, root) %doc etc/odbc.ini.sample
+%attr(0644, root, root) %doc etc/odbcinst.ini.sample
+%attr(0644, root, root) %{_includedir}/iodbcext.h
+%attr(0644, root, root) %{_includedir}/iodbcinst.h
+%attr(0644, root, root) %{_includedir}/iodbcunix.h
+%attr(0644, root, root) %{_includedir}/isqlext.h
+%attr(0644, root, root) %{_includedir}/isql.h
+%attr(0644, root, root) %{_includedir}/isqltypes.h
+%attr(0644, root, root) %{_includedir}/sql.h
+%attr(0644, root, root) %{_includedir}/sqltypes.h
+%attr(0644, root, root) %{_includedir}/sqlucode.h
+%attr(0644, root, root) %{_includedir}/sqlext.h
+%attr(0644, root, root) %{_includedir}/odbcinst.h
+%attr(0755, root, root) %{_bindir}/iodbc-config
+%attr(0644, root, root) %{_libdir}/libiodbc.a
+%attr(0644, root, root) %{_libdir}/libiodbc.la
+%attr(0755, root, root) %{_libdir}/libiodbc.so
+%attr(0644, root, root) %{_libdir}/libiodbcinst.a
+%attr(0644, root, root) %{_libdir}/libiodbcinst.la
+%attr(0755, root, root) %{_libdir}/libiodbcinst.so
+%attr(0644, root, root) %{_mandir}/man1/iodbc-config.1*
+%attr(0644, root, root) %{_datadir}/libiodbc/samples/Makefile
+%attr(0644, root, root) %{_datadir}/libiodbc/samples/iodbctest.c
+%attr(0644, root, root) %{_libdir}/pkgconfig/libiodbc.pc
+
+%if %{with_admin}
+%files admin
+%attr(0755, root, root) %{_bindir}/iodbcadm-gtk
+%ghost %{_libdir}/libdrvproxy.a
+%ghost %{_libdir}/libdrvproxy.la
+%ghost %{_libdir}/libdrvproxy.so
+%attr(0755, root, root) %{_libdir}/libdrvproxy.so.*
+%ghost %{_libdir}/libiodbcadm.a
+%ghost %{_libdir}/libiodbcadm.la
+%ghost %{_libdir}/libiodbcadm.so
+%attr(0755, root, root) %{_libdir}/libiodbcadm.so.*
+%attr(0644, root, root) %{_mandir}/man1/iodbcadm-gtk.1*
+%endif

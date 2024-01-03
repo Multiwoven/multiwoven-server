@@ -9,10 +9,10 @@ gem "aasm"
 gem "annotate"
 gem "aws-sdk"
 gem "interactor", "~> 3.0"
-gem "ruby-odbc", git: "https://github.com/Multiwoven/ruby-odbc.git"
+gem "mw-ruby-odbc"
 
-gem "multiwoven-integrations", git: "git@github.com:Multiwoven/multiwoven-integrations.git",
-                               branch: "file_path2"
+gem 'multiwoven-integrations', '~> 0.1.1'
+
 gem "pg", "~> 1.1"       # PostgreSQL Database
 gem "puma", ">= 5.0"     # Web server
 gem "rails", "~> 7.1.1"  # Core Rails gem
