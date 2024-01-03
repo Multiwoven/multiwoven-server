@@ -1,7 +1,0 @@
-#! /bin/sh
-#
-# Created by configure for iODBC Driver Manager 3.52.10
-#
-
-/bin/sh "./configure" \
-"$@"
