@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.1].define(version: 2024_01_03_111636) do
+ActiveRecord::Schema[7.1].define(version: 2024_01_03_195046) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
@@ -18,7 +18,7 @@ ActiveRecord::Schema[7.1].define(version: 2024_01_03_111636) do
     t.integer "workspace_id"
     t.integer "connector_id"
     t.jsonb "catalog"
-    t.integer "catalog_hash"
+    t.string "catalog_hash"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
   end
