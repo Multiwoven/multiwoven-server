@@ -6,5 +6,6 @@ FactoryBot.define do
     connector_type { 1 }
     configuration { { test: "test" } }
     name { Faker::Name.name }
+    connector_name { Faker::Name.name }
   end
 end
