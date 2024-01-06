@@ -9,6 +9,11 @@ gem "aasm"
 gem "annotate"
 gem "aws-sdk"
 gem "interactor", "~> 3.0"
+
+gem "ruby-odbc", git: "https://github.com/Multiwoven/ruby-odbc.git"
+
+gem "multiwoven-integrations", git: "https://github.com/Multiwoven/multiwoven-integrations.git"
+
 gem "pg", "~> 1.1"       # PostgreSQL Database
 gem "puma", ">= 5.0"     # Web server
 gem "rails", "~> 7.1.1"  # Core Rails gem
@@ -24,12 +29,13 @@ gem "devise"
 gem "devise-jwt"
 
 # Utilities
+gem "activerecord_json_validator", "~> 2.1.0"
 gem "bootsnap", require: false # Reduces boot time
 gem "tzinfo-data", platforms: %i[windows jruby] # Timezone data
 
 # Debugging
 group :development, :test do
-  gem "debug", platforms: %i[mri windows] # Debugging tool
+  gem "byebug", platforms: %i[mri windows] # Debugging tool
   gem "factory_bot_rails"
   gem "faker"
   gem "rspec-rails"
@@ -42,7 +48,6 @@ end
 group :development do
   # Add development-only gems here. For example:
   # gem "spring"  # Speeds up Rails commands
-  gem "byebug"
   gem "rubocop", require: false
   gem "rubocop-performance", require: false
   gem "rubocop-rails", require: false
