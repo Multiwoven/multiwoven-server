@@ -8,6 +8,7 @@ FactoryBot.define do
     email { Faker::Internet.unique.email }
     password { "password" }
     password_confirmation { "password" }
+    company_name { Faker::Company.name }
     trait :verified do
       confirmed_at { Time.current }
     end

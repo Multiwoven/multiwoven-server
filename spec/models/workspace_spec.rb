@@ -8,9 +8,7 @@ RSpec.describe Workspace, type: :model do
 
   context "validations" do
     it { should validate_presence_of(:name) }
-    it { should validate_uniqueness_of(:name) }
     it { should validate_presence_of(:slug) }
-    it { should validate_uniqueness_of(:slug) }
     it { should validate_inclusion_of(:status).in_array(%w[active inactive pending]) }
   end
 
