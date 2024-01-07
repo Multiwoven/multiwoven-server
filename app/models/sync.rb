@@ -18,6 +18,7 @@ class Sync < ApplicationRecord
   belongs_to :source, class_name: "Connector"
   belongs_to :destination, class_name: "Connector"
   belongs_to :model
+  has_many :sync_runs, dependent: :nullify
 
   # TODO: - Validate schedule data using JSON schema
 end

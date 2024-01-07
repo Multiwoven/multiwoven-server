@@ -19,4 +19,5 @@ RSpec.describe Sync, type: :model do
   it { should belong_to(:source).class_name("Connector") }
   it { should belong_to(:destination).class_name("Connector") }
   it { should belong_to(:model) }
+  it { should have_many(:sync_runs) }
 end

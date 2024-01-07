@@ -13,4 +13,5 @@ class SyncRun < ApplicationRecord
   enum :status, %i[success failed in_progress incomplete]
 
   belongs_to :sync
+  has_many :sync_records, dependent: :nullify
 end

@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require "rails_helper"
 
 RSpec.describe SyncRun, type: :model do
@@ -10,6 +12,7 @@ RSpec.describe SyncRun, type: :model do
   it { should validate_presence_of(:failed_rows) }
 
   it { should belong_to(:sync) }
+  it { should have_many(:sync_records) }
 
   describe "enum for status" do
     it { should define_enum_for(:status).with_values(%i[success failed in_progress incomplete]) }
