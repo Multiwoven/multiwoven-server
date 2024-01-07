@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.1].define(version: 2024_01_03_195046) do
+ActiveRecord::Schema[7.1].define(version: 2024_01_07_055430) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
@@ -23,19 +23,9 @@ ActiveRecord::Schema[7.1].define(version: 2024_01_03_195046) do
     t.datetime "updated_at", null: false
   end
 
-  create_table "connector_definitions", force: :cascade do |t|
-    t.integer "connector_type"
-    t.jsonb "spec"
-    t.integer "source_type"
-    t.jsonb "meta_data"
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
-  end
-
   create_table "connectors", force: :cascade do |t|
     t.integer "workspace_id"
     t.integer "connector_type"
-    t.integer "connector_definition_id"
     t.jsonb "configuration"
     t.string "name"
     t.datetime "created_at", null: false
@@ -52,6 +42,13 @@ ActiveRecord::Schema[7.1].define(version: 2024_01_03_195046) do
     t.string "primary_key"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+  end
+
+  create_table "organizations", force: :cascade do |t|
+    t.string "name"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["name"], name: "index_organizations_on_name", unique: true
   end
 
   create_table "syncs", force: :cascade do |t|
@@ -100,14 +97,15 @@ ActiveRecord::Schema[7.1].define(version: 2024_01_03_195046) do
     t.string "slug"
     t.string "status"
     t.string "api_key"
-    t.string "workspace_id"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.bigint "organization_id", null: false
     t.index ["name"], name: "index_workspaces_on_name", unique: true
+    t.index ["organization_id"], name: "index_workspaces_on_organization_id"
     t.index ["slug"], name: "index_workspaces_on_slug", unique: true
-    t.index ["workspace_id"], name: "index_workspaces_on_workspace_id", unique: true
   end
 
   add_foreign_key "workspace_users", "users"
   add_foreign_key "workspace_users", "workspaces", on_delete: :nullify
+  add_foreign_key "workspaces", "organizations"
 end

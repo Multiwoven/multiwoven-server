@@ -28,6 +28,7 @@ class Workspace < ApplicationRecord
   has_many :models, dependent: :nullify
   has_many :catalogs, dependent: :nullify
   has_many :syncs, dependent: :nullify
+  belongs_to :organization
 
   before_validation :generate_slug_and_status, on: :create
   before_update :update_slug, if: :name_changed?

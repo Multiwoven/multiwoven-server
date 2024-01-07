@@ -5,9 +5,10 @@
 require "rails_helper"
 
 RSpec.describe Workspaces::Create, type: :interactor do
+  let(:organization) { create(:organization) }
   let(:user) { create(:user) }
-  let(:valid_attributes) { { name: "My Workspace", slug: "my-workspace", status: "active" } }
-  let(:invalid_attributes) { { name: nil, slug: nil, status: "invalid" } }
+  let(:valid_attributes) { { name: "My Workspace", slug: "my-workspace", status: "active", organization: organization } }
+  let(:invalid_attributes) { { name: nil, slug: nil, status: "invalid", organization: nil } }
   let(:context) { Workspaces::Create.call(workspace_params: valid_attributes, user:) }
   let(:context_fail) { Workspaces::Create.call(workspace_params: invalid_attributes, user:) }
 
