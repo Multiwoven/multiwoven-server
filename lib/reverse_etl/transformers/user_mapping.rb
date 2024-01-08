@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 module ReverseEtl
-  module Extracters
+  module Extractors
     class UserMapping < Base
     end
   end
