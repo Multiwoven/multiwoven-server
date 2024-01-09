@@ -31,4 +31,12 @@ class Connector < ApplicationRecord
              ).new
     client.connector_spec[:connection_specification].to_json
   end
+
+  def to_protocol
+    Multiwoven::Integrations::Protocol::Connector.new(
+      name: connector_name,
+      type: connector_type,
+      connection_specification: configuration
+    )
+  end
 end
