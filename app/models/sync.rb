@@ -6,19 +6,17 @@ class Sync < ApplicationRecord
   validates :destination_id, presence: true
   validates :model_id, presence: true
   validates :configuration, presence: true
-  # TODO: Add primary key and cursor field
   validates :schedule_type, presence: true
   validates :schedule_data, presence: true
   validates :status, presence: true
 
   enum :schedule_type, %i[manual automated]
   enum :status, %i[healthy failed aborted in_progress disabled]
+  enum :sync_mode, %i[full_refresh incremental]
 
   belongs_to :workspace
   belongs_to :source, class_name: "Connector"
   belongs_to :destination, class_name: "Connector"
   belongs_to :model
   has_many :sync_runs, dependent: :nullify
-
-  # TODO: - Validate schedule data using JSON schema
 end

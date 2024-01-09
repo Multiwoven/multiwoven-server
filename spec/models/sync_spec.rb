@@ -14,6 +14,7 @@ RSpec.describe Sync, type: :model do
 
   it { should define_enum_for(:schedule_type).with_values(manual: 0, automated: 1) }
   it { should define_enum_for(:status).with_values(healthy: 0, failed: 1, aborted: 2, in_progress: 3, disabled: 4) }
+  it { should define_enum_for(:sync_mode).with_values(full_refresh: 0, incremental: 1) }
 
   it { should belong_to(:workspace) }
   it { should belong_to(:source).class_name("Connector") }
