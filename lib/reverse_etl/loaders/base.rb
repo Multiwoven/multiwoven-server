@@ -3,7 +3,7 @@
 module ReverseEtl
   module Loaders
     class Base
-      def write(_sync_config, _records)
+      def write(_sync_run_id)
         raise "Not implemented"
       end
     end

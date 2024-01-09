@@ -15,6 +15,6 @@ RSpec.describe SyncRun, type: :model do
   it { should have_many(:sync_records) }
 
   describe "enum for status" do
-    it { should define_enum_for(:status).with_values(%i[success failed in_progress incomplete]) }
+    it { should define_enum_for(:status).with_values(%i[pending in_progress success failed incomplete]) }
   end
 end

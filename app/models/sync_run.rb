@@ -10,7 +10,7 @@ class SyncRun < ApplicationRecord
   validates :successful_rows, presence: true
   validates :failed_rows, presence: true
 
-  enum :status, %i[success failed in_progress incomplete]
+  enum :status, %i[pending in_progress success failed incomplete]
 
   belongs_to :sync
   has_many :sync_records, dependent: :nullify

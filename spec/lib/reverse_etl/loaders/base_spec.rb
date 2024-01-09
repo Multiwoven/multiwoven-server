@@ -6,7 +6,7 @@ RSpec.describe ReverseEtl::Loaders::Base do
   describe "#transform" do
     it 'raises a "Not implemented" error' do
       base_extractor = ReverseEtl::Loaders::Base.new
-      expect { base_extractor.write(nil, nil) }.to raise_error(RuntimeError, "Not implemented")
+      expect { base_extractor.write(nil) }.to raise_error(RuntimeError, "Not implemented")
     end
   end
 end

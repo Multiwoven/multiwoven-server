@@ -3,7 +3,7 @@
 module ReverseEtl
   module Extractors
     class Base
-      def read(_sync_config)
+      def read(_sync_run_id)
         raise "Not implemented"
       end
     end
