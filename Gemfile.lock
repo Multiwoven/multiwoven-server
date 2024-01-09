@@ -1785,6 +1785,8 @@ GEM
       timeout
     net-smtp (0.4.0)
       net-protocol
+    newrelic_rpm (9.6.0)
+      base64
     nio4r (2.7.0)
     nokogiri (1.16.0-aarch64-linux)
       racc (~> 1.4)
@@ -1964,6 +1966,7 @@ DEPENDENCIES
   jwt
   kaminari
   multiwoven-integrations!
+  newrelic_rpm
   pg (~> 1.1)
   puma (>= 5.0)
   rack-cors
