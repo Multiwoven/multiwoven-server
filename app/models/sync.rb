@@ -9,6 +9,7 @@ class Sync < ApplicationRecord
   validates :schedule_type, presence: true
   validates :sync_interval, presence: true
   validates :sync_interval_unit, presence: true
+  validates :stream_name, presence: true
 
   validates :status, presence: true
 
