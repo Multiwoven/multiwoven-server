@@ -12,4 +12,13 @@ class Catalog < ApplicationRecord
   def find_stream_by_name(name)
     catalog["streams"].find { |stream| stream["name"] == name }
   end
+
+  def stream_to_protocol(stream)
+    stream = stream.with_indifferent_access
+    Multiwoven::Integrations::Protocol::Stream.new(
+      name: stream[:name],
+      url: stream[:url],
+      json_schema: stream[:json_schema]
+    )
+  end
 end

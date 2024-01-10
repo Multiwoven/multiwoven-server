@@ -22,4 +22,23 @@ RSpec.describe Sync, type: :model do
   it { should belong_to(:destination).class_name("Connector") }
   it { should belong_to(:model) }
   it { should have_many(:sync_runs) }
+
+  describe "#to_protocol" do
+    let(:streams) do
+      [
+        { "name" => "profile", "json_schema" => {} },
+        { "name" => "customer", "json_schema" => {} }
+      ]
+    end
+
+    let(:destination) { create(:connector, connector_type: "destination") }
+    let!(:catalog) { create(:catalog, connector: destination, catalog: { "streams" => streams }) }
+
+    let(:sync) { create(:sync, destination:) }
+
+    it "returns sync config protocol" do
+      protocol = sync.to_protocol
+      expect(protocol).to be_a(Multiwoven::Integrations::Protocol::SyncConfig)
+    end
+  end
 end

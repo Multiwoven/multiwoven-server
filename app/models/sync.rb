@@ -24,4 +24,18 @@ class Sync < ApplicationRecord
   belongs_to :destination, class_name: "Connector"
   belongs_to :model
   has_many :sync_runs, dependent: :nullify
+
+  def to_protocol
+    catalog = destination.catalog
+    Multiwoven::Integrations::Protocol::SyncConfig.new(
+      model: model.to_protocol,
+      source: source.to_protocol,
+      destination: destination.to_protocol,
+      stream: catalog.stream_to_protocol(
+        catalog.find_stream_by_name(stream_name)
+      ),
+      sync_mode: Multiwoven::Integrations::Protocol::SyncMode["incremental"],
+      destination_sync_mode: Multiwoven::Integrations::Protocol::DestinationSyncMode["insert"]
+    )
+  end
 end
