@@ -31,6 +31,7 @@ module Connectors
     end
 
     def streams(connector)
+      # TODO: Add this as hash not string
       @streams ||= connector_client(connector)
                    .discover.catalog.to_json
     end

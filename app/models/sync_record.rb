@@ -5,6 +5,9 @@ class SyncRecord < ApplicationRecord
   validates :sync_run_id, presence: true
   validates :record, presence: true
   validates :fingerprint, presence: true
+  validates :action, presence: true
+
+  enum :action, %i[destination_insert destination_update]
 
   belongs_to :sync
   belongs_to :sync_run
