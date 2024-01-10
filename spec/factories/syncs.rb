@@ -9,6 +9,7 @@ FactoryBot.define do
     configuration { { test: "Test" } }
     schedule_type { 1 }
     sync_interval { 1 }
+    stream_name { "profile" }
     sync_interval_unit { "hours" }
     status { 1 }
   end

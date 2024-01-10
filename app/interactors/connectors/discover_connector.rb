@@ -13,7 +13,7 @@ module Connectors
       )
 
       catalog.catalog = streams(context.connector)
-      catalog.catalog_hash = Digest::SHA1.hexdigest(catalog.catalog)
+      catalog.catalog_hash = Digest::SHA1.hexdigest(catalog.catalog.to_s)
       catalog.save
 
       if catalog.persisted?
@@ -31,9 +31,8 @@ module Connectors
     end
 
     def streams(connector)
-      # TODO: Add this as hash not string
       @streams ||= connector_client(connector)
-                   .discover.catalog.to_json
+                   .discover.catalog.to_h
     end
   end
 end
