@@ -14,19 +14,23 @@ module ReverseEtl
         let(:sync) { create(:sync, destination:) }
 
         before do
-          allow(client).to receive(:execute) { |config| Array.new(config.limit, "mock_data") }
+          call_count = 0
+          allow(client).to receive(:read) do |_config|
+            call_count += 1
+            call_count < 10 ? Array.new(100, "mock_data") : Array.new(99, "mock_data")
+          end
         end
 
         it "executes batches correctly" do
           params = {
             offset: 0,
             limit: 100,
-            batch_size: 10,
+            batch_size: 100,
             sync_config: sync.to_protocol,
             client:
           }
 
-          expect(client).to receive(:execute).exactly(10).times
+          expect(client).to receive(:read).exactly(10).times
 
           results = []
           BatchQuery.execute_in_batches(params) do |result|
@@ -34,8 +38,8 @@ module ReverseEtl
           end
 
           expect(results.size).to eq(10)
-          expect(results.first.size).to eq(10)
-          expect(results.last.size).to eq(10)
+          expect(results.first.size).to eq(100)
+          expect(results.last.size).to eq(99)
         end
       end
     end
