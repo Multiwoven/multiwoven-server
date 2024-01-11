@@ -10,13 +10,11 @@ class Sync < ApplicationRecord
   validates :sync_interval, presence: true
   validates :sync_interval_unit, presence: true
   validates :stream_name, presence: true
-
   validates :status, presence: true
 
   enum :schedule_type, %i[manual automated]
   enum :status, %i[healthy failed aborted in_progress disabled]
   enum :sync_mode, %i[full_refresh incremental]
-
   enum :sync_interval_unit, %i[hours days weeks]
 
   belongs_to :workspace
