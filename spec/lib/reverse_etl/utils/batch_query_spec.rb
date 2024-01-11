@@ -34,8 +34,8 @@ module ReverseEtl
           end
 
           expect(results.size).to eq(10)
-          expect(results.first.size).to eq(10) # each batch should have 10 items
-          expect(results.last.size).to eq(10)  # assuming there are at least 100 mock records
+          expect(results.first.size).to eq(10)
+          expect(results.last.size).to eq(10)
         end
       end
     end

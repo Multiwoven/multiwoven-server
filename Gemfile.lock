@@ -1,6 +1,7 @@
 GIT
   remote: https://github.com/Multiwoven/multiwoven-integrations.git
-  revision: cede3caa05c7f785a9d591cee07d6d0992466800
+  revision: 48a0e81e2c477e7ef3a87b6537bb74e946c0a473
+  branch: version_bump
   specs:
     multiwoven-integrations (0.1.2)
       activesupport
@@ -1951,15 +1952,13 @@ GEM
     trailblazer-option (0.1.2)
     tzinfo (2.0.6)
       concurrent-ruby (~> 1.0)
-    tzinfo-data (1.2023.4)
-      tzinfo (>= 1.0.0)
     uber (0.1.0)
     unf (0.1.4)
       unf_ext
     unf_ext (0.0.9.1)
     unicode-display_width (2.5.0)
-    uri (0.13.0)
     uniform_notifier (1.16.0)
+    uri (0.13.0)
     uri_template (0.7.0)
     warden (1.2.9)
       rack (>= 2.0.9)
