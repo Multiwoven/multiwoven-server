@@ -30,7 +30,7 @@ module Api
           render json: result.user, status: :created
         else
           render_error(message: "Signup failed", status: :unprocessable_entity,
-                       details: format_signup_errors(result.user))
+                       details: format_errors(result.user))
         end
       end
 
@@ -98,14 +98,6 @@ module Api
                  status: :ok
         else
           render json: { errors: [{ detail: result.error || result.errors }] }, status: :unprocessable_entity
-        end
-      end
-
-      private
-
-      def format_signup_errors(user)
-        user.errors.messages.each_with_object({}) do |(attribute, messages), formatted_errors|
-          formatted_errors[attribute.to_s] = messages.first
         end
       end
     end
