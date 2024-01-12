@@ -10,10 +10,12 @@ module ReverseEtl
         sync_run = setup_sync_run(sync_run_id)
         source_client = setup_source_client(sync_run.sync)
         batch_query_params = batch_params(source_client, sync_run.sync.to_protocol)
+        model = sync_run.sync.model
 
         ReverseEtl::Utils::BatchQuery.execute_in_batches(batch_query_params) do |records|
-          process_records(records, sync_run)
+          process_records(records, sync_run, model)
         rescue StandardError => e
+          byebug
           Rails.logger.error(e)
         end
       end
@@ -30,19 +32,20 @@ module ReverseEtl
         sync.source.connector_client.new
       end
 
-      def process_records(records, sync_run)
+      def process_records(records, sync_run, model)
         # TODO: parellelize this
         # Parallel.each(records, in_threads: THREAD_COUNT) do |message|
         records.each do |message|
-          process_record(message, sync_run)
+          process_record(message, sync_run, model)
         end
       end
 
-      def process_record(message, sync_run)
+      def process_record(message, sync_run, model)
         record = message.record
         fingerprint = generate_fingerprint(record.data)
+        primary_key = record.data.with_indifferent_access[model.primary_key]
 
-        sync_record = find_or_initialize_sync_record(sync_run, fingerprint)
+        sync_record = find_or_initialize_sync_record(sync_run, primary_key)
         update_or_create_sync_record(sync_record, record, sync_run, fingerprint)
       rescue StandardError => e
         Rails.logger.error(e)
@@ -52,10 +55,9 @@ module ReverseEtl
         Digest::SHA1.hexdigest(data.to_json)
       end
 
-      def find_or_initialize_sync_record(sync_run, fingerprint)
-        # TODO: This is incorrect. Check find sync_record by primary key
-        sync_run.sync_records.find_by(fingerprint:) ||
-          sync_run.sync_records.new(sync_id: sync_run.sync_id, created_at: DateTime.now)
+      def find_or_initialize_sync_record(sync_run, primary_key)
+        sync_run.sync_records.find_by(sync_id: sync_run.sync_id, primary_key:) ||
+          sync_run.sync_records.new(sync_id: sync_run.sync_id, primary_key:, created_at: DateTime.now)
       end
 
       def new_record?(sync_record, fingerprint)
@@ -73,7 +75,7 @@ module ReverseEtl
           sync_run_id: sync_run.id,
           action: action(sync_record),
           fingerprint:,
-          record: record.data.to_json
+          record: record.data
         )
         sync_record.save!
       end

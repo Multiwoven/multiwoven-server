@@ -6,6 +6,7 @@ class SyncRecord < ApplicationRecord
   validates :record, presence: true
   validates :fingerprint, presence: true
   validates :action, presence: true
+  validates :primary_key, presence: true
 
   enum :action, %i[destination_insert destination_update]
 

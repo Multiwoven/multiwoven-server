@@ -22,6 +22,7 @@ RSpec.describe ReverseEtl::Extractors::IncrementalDelta do
   let(:records) { [record1, record2] }
 
   before do
+    sync.model.update(primary_key: "id")
     allow(client).to receive(:read).and_return(records)
     allow(ReverseEtl::Utils::BatchQuery).to receive(:execute_in_batches).and_yield(records)
     allow(sync_run.sync.source).to receive_message_chain(:connector_client, :new).and_return(client)
