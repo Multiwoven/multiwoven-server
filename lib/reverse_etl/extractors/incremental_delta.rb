@@ -15,7 +15,6 @@ module ReverseEtl
         ReverseEtl::Utils::BatchQuery.execute_in_batches(batch_query_params) do |records|
           process_records(records, sync_run, model)
         rescue StandardError => e
-          byebug
           Rails.logger.error(e)
         end
       end

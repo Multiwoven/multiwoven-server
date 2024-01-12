@@ -11,11 +11,11 @@ RSpec.describe ReverseEtl::Extractors::IncrementalDelta do
 
   let(:client) { Multiwoven::Integrations::Source::Snowflake::Client.new }
   let(:record1) do
-    Multiwoven::Integrations::Protocol::RecordMessage.new(data: { id: 1 },
+    Multiwoven::Integrations::Protocol::RecordMessage.new(data: { "id" => 1 },
                                                           emitted_at: DateTime.now.to_i).to_multiwoven_message
   end
   let(:record2) do
-    Multiwoven::Integrations::Protocol::RecordMessage.new(data: { id: 2 },
+    Multiwoven::Integrations::Protocol::RecordMessage.new(data: { "id" => 2 },
                                                           emitted_at: DateTime.now.to_i).to_multiwoven_message
   end
 
@@ -36,16 +36,31 @@ RSpec.describe ReverseEtl::Extractors::IncrementalDelta do
     end
   end
 
-  xcontext "when an existing record is updated" do
-    it "updates the existing sync record" do
-      # First read to create initial records
+  context "when an existing record is updated" do
+    it "updates the existing sync record with fingerprint change" do
+      # First sync run
       subject.read(sync_run.id)
-      expect { sync_run.sync_records.count }.to eq(2)
+      expect(sync_run.sync_records.count).to eq(2)
 
-      sync_record1 = sync_run.sync_records.first
-      sync_record2 = sync_run.sync_records.last
+      initial_sync_record = sync_run.sync_records.find_by(primary_key: record1.record.data["id"])
+      expect(initial_sync_record.fingerprint).to eq(subject.send(:generate_fingerprint, record1.record.data))
+      expect(initial_sync_record.action).to eq("destination_insert")
 
-      # Modify record1 and read again
+      modified_record1 = Multiwoven::Integrations::Protocol::RecordMessage.new(
+        data: record1.record.data.merge({ "modified_field" => "new_value" }),
+        emitted_at: DateTime.now.to_i
+      ).to_multiwoven_message
+
+      allow(ReverseEtl::Utils::BatchQuery).to receive(:execute_in_batches).and_yield([modified_record1, record2])
+
+      # Second sync run
+      subject.read(sync_run.id)
+
+      updated_sync_record = sync_run.sync_records.find_by(primary_key: record1.record.data["id"])
+      expect(sync_run.sync_records.count).to eq(2)
+      expect(updated_sync_record.fingerprint).not_to eq(initial_sync_record.fingerprint)
+      expect(updated_sync_record.action).to eq("destination_update")
+      expect(updated_sync_record.record).to eq(modified_record1.record.data)
     end
   end
 end
