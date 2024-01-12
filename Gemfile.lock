@@ -1,6 +1,6 @@
 GIT
   remote: https://github.com/Multiwoven/multiwoven-integrations.git
-  revision: 48a0e81e2c477e7ef3a87b6537bb74e946c0a473
+  revision: 1a7b722b81a5ba1cc7a826e75a287abf4dd84907
   branch: version_bump
   specs:
     multiwoven-integrations (0.1.2)
@@ -115,7 +115,7 @@ GEM
       rake (>= 10.4, < 14.0)
     ast (2.4.2)
     aws-eventstream (1.3.0)
-    aws-partitions (1.878.0)
+    aws-partitions (1.879.0)
     aws-sdk (3.2.0)
       aws-sdk-resources (~> 3)
     aws-sdk-accessanalyzer (1.44.0)
@@ -473,7 +473,7 @@ GEM
     aws-sdk-ebs (1.37.0)
       aws-sdk-core (~> 3, >= 3.188.0)
       aws-sigv4 (~> 1.1)
-    aws-sdk-ec2 (1.432.0)
+    aws-sdk-ec2 (1.433.0)
       aws-sdk-core (~> 3, >= 3.188.0)
       aws-sigv4 (~> 1.1)
     aws-sdk-ec2instanceconnect (1.36.0)
@@ -485,7 +485,7 @@ GEM
     aws-sdk-ecrpublic (1.25.0)
       aws-sdk-core (~> 3, >= 3.188.0)
       aws-sigv4 (~> 1.1)
-    aws-sdk-ecs (1.136.0)
+    aws-sdk-ecs (1.137.0)
       aws-sdk-core (~> 3, >= 3.188.0)
       aws-sigv4 (~> 1.1)
     aws-sdk-efs (1.71.0)
@@ -530,7 +530,7 @@ GEM
     aws-sdk-entityresolution (1.5.0)
       aws-sdk-core (~> 3, >= 3.188.0)
       aws-sigv4 (~> 1.1)
-    aws-sdk-eventbridge (1.55.0)
+    aws-sdk-eventbridge (1.56.0)
       aws-sdk-core (~> 3, >= 3.188.0)
       aws-sigv4 (~> 1.1)
     aws-sdk-finspace (1.27.0)
@@ -623,7 +623,7 @@ GEM
     aws-sdk-internetmonitor (1.13.0)
       aws-sdk-core (~> 3, >= 3.188.0)
       aws-sigv4 (~> 1.1)
-    aws-sdk-iot (1.116.0)
+    aws-sdk-iot (1.117.0)
       aws-sdk-core (~> 3, >= 3.188.0)
       aws-sigv4 (~> 1.1)
     aws-sdk-iot1clickdevicesservice (1.48.0)
@@ -650,7 +650,7 @@ GEM
     aws-sdk-iotfleethub (1.22.0)
       aws-sdk-core (~> 3, >= 3.188.0)
       aws-sigv4 (~> 1.1)
-    aws-sdk-iotfleetwise (1.18.0)
+    aws-sdk-iotfleetwise (1.19.0)
       aws-sdk-core (~> 3, >= 3.188.0)
       aws-sigv4 (~> 1.1)
     aws-sdk-iotjobsdataplane (1.47.0)
@@ -1465,7 +1465,7 @@ GEM
     aws-sdk-schemas (1.34.0)
       aws-sdk-core (~> 3, >= 3.188.0)
       aws-sigv4 (~> 1.1)
-    aws-sdk-secretsmanager (1.88.0)
+    aws-sdk-secretsmanager (1.89.0)
       aws-sdk-core (~> 3, >= 3.188.0)
       aws-sigv4 (~> 1.1)
     aws-sdk-securityhub (1.99.0)
@@ -1612,7 +1612,7 @@ GEM
     aws-sdk-workmailmessageflow (1.32.0)
       aws-sdk-core (~> 3, >= 3.188.0)
       aws-sigv4 (~> 1.1)
-    aws-sdk-workspaces (1.95.0)
+    aws-sdk-workspaces (1.96.0)
       aws-sdk-core (~> 3, >= 3.188.0)
       aws-sigv4 (~> 1.1)
     aws-sdk-workspacesthinclient (1.1.0)
@@ -1789,7 +1789,7 @@ GEM
       net-smtp
     marcel (1.0.2)
     mini_mime (1.1.5)
-    minitest (5.20.0)
+    minitest (5.21.1)
     msgpack (1.7.2)
     multi_json (1.15.0)
     multipart-post (2.3.0)

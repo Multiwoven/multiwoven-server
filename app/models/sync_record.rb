@@ -9,6 +9,8 @@ class SyncRecord < ApplicationRecord
   validates :primary_key, presence: true
 
   enum :action, %i[destination_insert destination_update]
+  # TODO: Add status to track write status
+  # enum :status, %i[pending success failed]
 
   belongs_to :sync
   belongs_to :sync_run

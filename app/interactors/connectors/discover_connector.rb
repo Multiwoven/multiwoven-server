@@ -32,7 +32,7 @@ module Connectors
 
     def streams(connector)
       @streams ||= connector_client(connector)
-                   .discover.catalog.to_h
+                   .discover(connector.configuration).catalog.to_h
     end
   end
 end
