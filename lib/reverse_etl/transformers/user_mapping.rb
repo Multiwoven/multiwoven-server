@@ -3,38 +3,45 @@
 module ReverseEtl
   module Transformers
     class UserMapping < Base
-      def transform(sync, record_datum)
+      def transform(sync, record)
         mapping = sync.configuration
-        record_datum.map do |record_data|
-          transform_record(record_data, mapping)
-        rescue StandardError => e
-          Rails.logger.error("Error transforming record: #{e.message}")
-          nil
-        end
+        transform_record(record, mapping)
+      rescue StandardError => e
+        Rails.logger.error("Error transforming record: #{e.message}")
       end
 
       private
 
-      def transform_record(source_data, mapping)
-        mapping.each_with_object({}) do |(source_key, dest_path), destination_data|
-          insert_value(destination_data, dest_path.split("."), source_data[source_key])
-        end
-      end
+      def transform_record(source_data, mapping) # rubocop:disable Metrics/CyclomaticComplexity,Metrics/PerceivedComplexity
+        destination_data = {}
 
-      # Only god knows how this method works !!!
-      def insert_value(destination, keys, value) # rubocop:disable Metrics/CyclomaticComplexity,Metrics/PerceivedComplexity
-        last_key = keys.pop
+        mapping.each do |source_key, dest_path|
+          dest_keys = dest_path.split(".")
+          current = destination_data
 
-        current = keys.reduce(destination) do |current_dest, key|
-          key, is_array = key.end_with?("[]") ? [key[0...-2], true] : [key, false]
-          is_array ? (current_dest[key] ||= []).last || current_dest[key].push({}) : (current_dest[key] ||= {})
+          dest_keys.each_with_index do |key, index|
+            if index == dest_keys.length - 1
+              # Handle array notation in the path
+              if key.include?("[]")
+                array_key = key.gsub("[]", "")
+                current[array_key] ||= []
+                current[array_key] << source_data[source_key]
+              else
+                current[key] = source_data[source_key]
+              end
+            elsif key.include?("[]")
+              array_key = key.gsub("[]", "")
+              current[array_key] ||= []
+              # Use the last element of the array or create a new one if empty
+              current = current[array_key].last || current[array_key].push({}).last
+            else
+              current[key] ||= {}
+              current = current[key]
+            end
+          end
         end
 
-        if last_key.end_with?("[]")
-          (current[last_key[0...-2]] ||= []) << value
-        else
-          current[last_key] = value
-        end
+        destination_data
       end
     end
   end
