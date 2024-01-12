@@ -6,6 +6,7 @@ module ReverseEtl
       # TODO: Take this from ENV
       THREAD_COUNT = 3
 
+      # TODO: Make it as class method
       def read(sync_run_id)
         sync_run = setup_sync_run(sync_run_id)
         source_client = setup_source_client(sync_run.sync)
@@ -42,7 +43,7 @@ module ReverseEtl
       def process_record(message, sync_run, model)
         record = message.record
         fingerprint = generate_fingerprint(record.data)
-        primary_key = record.data.with_indifferent_access[model.primary_key]
+        primary_key = record.data.with_indifferent_access[model.primary_key.downcase]
 
         sync_record = find_or_initialize_sync_record(sync_run, primary_key)
         update_or_create_sync_record(sync_record, record, sync_run, fingerprint)

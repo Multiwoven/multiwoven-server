@@ -14,4 +14,15 @@ class SyncRun < ApplicationRecord
 
   belongs_to :sync
   has_many :sync_records, dependent: :nullify
+
+  after_initialize :set_defaults, if: :new_record?
+
+  def set_defaults
+    self.status ||= "pending"
+    self.total_rows ||= 0
+    self.successful_rows ||= 0
+    self.failed_rows ||= 0
+    self.started_at ||= Time.zone.now
+    self.finished_at ||= Time.zone.now
+  end
 end

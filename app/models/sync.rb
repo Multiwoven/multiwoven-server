@@ -23,6 +23,8 @@ class Sync < ApplicationRecord
   belongs_to :model
   has_many :sync_runs, dependent: :nullify
 
+  after_initialize :set_defaults, if: :new_record?
+
   def to_protocol
     catalog = destination.catalog
     Multiwoven::Integrations::Protocol::SyncConfig.new(
@@ -35,5 +37,9 @@ class Sync < ApplicationRecord
       sync_mode: Multiwoven::Integrations::Protocol::SyncMode["incremental"],
       destination_sync_mode: Multiwoven::Integrations::Protocol::DestinationSyncMode["insert"]
     )
+  end
+
+  def set_defaults
+    self.status ||= "healthy"
   end
 end
