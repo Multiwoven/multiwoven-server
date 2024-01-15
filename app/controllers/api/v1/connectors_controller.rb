@@ -9,9 +9,12 @@ module Api
       def index
         @connectors = current_workspace
                       .connectors.all.page(params[:page] || 1)
+        render json: @connectors, status: :ok
       end
 
-      def show; end
+      def show
+        render json: @connector, status: :ok
+      end
 
       def create
         result = CreateConnector.call(
@@ -21,9 +24,13 @@ module Api
 
         if result.success?
           @connector = result.connector
+          render json: @connector, status: :created
         else
-          render json: { errors: result.errors },
-                 status: :unprocessable_entity
+          render_error(
+            message: "Connector creation failed",
+            status: :unprocessable_entity,
+            details: format_errors(result.connector)
+          )
         end
       end
 
@@ -35,9 +42,13 @@ module Api
 
         if result.success?
           @connector = result.connector
+          render json: @connector, status: :ok
         else
-          render json: { errors: result.errors },
-                 status: :unprocessable_entity
+          render_error(
+            message: "Connector update failed",
+            status: :unprocessable_entity,
+            details: format_errors(result.connector)
+          )
         end
       end
 
@@ -64,13 +75,16 @@ module Api
       def set_connector
         @connector = current_workspace.connectors.find(params[:id])
       rescue ActiveRecord::RecordNotFound => e
-        render json: { error: e.message }, status: :not_found
+        render_error(
+            message: "Connector not found",
+            status: :not_found
+          )
       end
 
       def connector_params
         params.require(:connector).permit(:workspace_id,
                                           :connector_type,
-                                          :connector_name, :name,
+                                          :connector_name, :name,:description,
                                           configuration: {})
       end
     end

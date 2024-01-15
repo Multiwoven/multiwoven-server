@@ -32,8 +32,6 @@ RSpec.describe WorkspaceUsers::Update, type: :interactor do
       end
 
       it "provides a proper error message" do
-        puts "<<<<<<<<<<<<<<<<<<<<<<"
-        puts result
         error_message = "Role is not included in the list"
         expect(result.errors).to include(error_message)
       end
@@ -47,8 +45,6 @@ RSpec.describe WorkspaceUsers::Update, type: :interactor do
       end
 
       it "returns a not found error" do
-        puts ">>>>>>>>>>>>>>>>>>>>>>"
-        puts result_with_invalid_id
         expect(result_with_invalid_id.errors).to include("WorkspaceUser not found")
       end
     end
