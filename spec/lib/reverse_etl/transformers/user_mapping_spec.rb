@@ -6,6 +6,7 @@ RSpec.describe ReverseEtl::Transformers::UserMapping do
 
     context "with complex mapping including arrays and nested structures" do
       let(:sync) { instance_double("Sync", configuration: mapping) }
+      let(:sync_record) { instance_double("SyncRecord", record: source_data) }
       let(:mapping) do
         { "cr_fee" => "attributes.properties.fee", "cr_item_sk" => "id" }
       end
@@ -41,7 +42,7 @@ RSpec.describe ReverseEtl::Transformers::UserMapping do
       end
 
       it "correctly handles complex transformations for each record" do
-        results = extractor.transform(sync, source_data)
+        results = extractor.transform(sync, sync_record)
         expected_result = {
           "attributes" => { "properties" => { "fee" => "57.82" } }, "id" => "231891"
         }

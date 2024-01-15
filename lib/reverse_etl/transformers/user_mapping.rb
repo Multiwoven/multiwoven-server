@@ -6,10 +6,7 @@ module ReverseEtl
       def transform(sync, sync_record)
         mapping = sync.configuration
         record = sync_record.record
-        mapped_record = transform_record(record, mapping)
-        # Hack to test the syncing part
-        mapped_record["data"]["type"] = "profile"
-        mapped_record
+        transform_record(record, mapping)
       rescue StandardError => e
         Rails.logger.error("Error transforming record: #{e.message}")
       end

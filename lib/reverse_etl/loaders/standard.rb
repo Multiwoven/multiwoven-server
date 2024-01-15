@@ -3,6 +3,7 @@
 module ReverseEtl
   module Loaders
     class Standard < Base
+      THREAD_COUNT = 5
       def write(sync_run_id)
         sync_run = SyncRun.find(sync_run_id)
         sync = sync_run.sync
@@ -12,14 +13,14 @@ module ReverseEtl
         client = sync.destination.connector_client.new
 
         sync_run.sync_records.find_in_batches do |sync_records|
-          sync_records.each do |sync_record|
+          Parallel.each(sync_records, in_threads: THREAD_COUNT) do |sync_record|
             record = transformer.transform(sync, sync_record)
-            # puts record
             report = client.write(sync_config, [record])
-            # Multiwoven::Integrations::Destination::Klaviyo::Client
+            # TODO: Update count in sync or sync run
+            puts "success: #{report.tracking.success}"
+            puts "failure: #{report.tracking.failed}"
             puts report
           rescue StandardError => e
-            byebug
             Rails.logger(e)
           end
         end
