@@ -1,3 +1,14 @@
 class ConnectorSerializer < ActiveModel::Serializer
-  attributes :id, :workspace_id, :connector_type, :connector_definition_id, :configuration, :name, :description, :created_at, :updated_at, :connector_name
+  attributes :id, :name, :connector_type, :workspace_id, :created_at, :updated_at, :configuration
+
+  attribute :connector_definition_name, key: :connector_name
+  attribute :connector_definition_icon, key: :icon
+
+  def connector_definition_name
+    object.connector_definition[:data][:name]
+  end
+
+  def connector_definition_icon
+    object.connector_definition[:data][:icon]
+  end
 end
