@@ -74,17 +74,17 @@ module Api
 
       def set_connector
         @connector = current_workspace.connectors.find(params[:id])
-      rescue ActiveRecord::RecordNotFound => e
+      rescue ActiveRecord::RecordNotFound
         render_error(
-            message: "Connector not found",
-            status: :not_found
-          )
+          message: "Connector not found",
+          status: :not_found
+        )
       end
 
       def connector_params
         params.require(:connector).permit(:workspace_id,
                                           :connector_type,
-                                          :connector_name, :name,:description,
+                                          :connector_name, :name, :description,
                                           configuration: {})
       end
     end

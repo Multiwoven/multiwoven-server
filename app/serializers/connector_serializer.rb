@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class ConnectorSerializer < ActiveModel::Serializer
   attributes :id, :name, :connector_type, :workspace_id, :created_at, :updated_at, :configuration
 
