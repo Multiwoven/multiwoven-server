@@ -3,9 +3,13 @@
 module ReverseEtl
   module Transformers
     class UserMapping < Base
-      def transform(sync, record)
+      def transform(sync, sync_record)
         mapping = sync.configuration
-        transform_record(record, mapping)
+        record = sync_record.record
+        mapped_record = transform_record(record, mapping)
+        # Hack to test the syncing part
+        mapped_record["data"]["type"] = "profile"
+        mapped_record
       rescue StandardError => e
         Rails.logger.error("Error transforming record: #{e.message}")
       end

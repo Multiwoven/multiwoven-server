@@ -18,7 +18,8 @@ class Catalog < ApplicationRecord
     Multiwoven::Integrations::Protocol::Stream.new(
       name: stream[:name],
       url: stream[:url],
-      json_schema: stream[:json_schema]
+      json_schema: stream[:json_schema],
+      request_method: stream[:request_method]
     )
   end
 end

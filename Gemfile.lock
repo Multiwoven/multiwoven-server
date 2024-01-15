@@ -1,7 +1,6 @@
 GIT
   remote: https://github.com/Multiwoven/multiwoven-integrations.git
-  revision: 1a7b722b81a5ba1cc7a826e75a287abf4dd84907
-  branch: version_bump
+  revision: 7c43db6a369403748ed29085bb5254405ad1c95e
   specs:
     multiwoven-integrations (0.1.2)
       activesupport
