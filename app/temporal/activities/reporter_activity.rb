@@ -2,6 +2,8 @@
 
 module Activities
   class ReporterActivity < Temporal::Activity
-    def execute; end
+    def execute
+      puts "ReporterActivity.execute"
+    end
   end
 end

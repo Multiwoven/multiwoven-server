@@ -2,6 +2,8 @@
 
 module Activities
   class LoaderActivity < Temporal::Activity
-    def execute; end
+    def execute
+      puts "ExtractorActivity.execute"
+    end
   end
 end

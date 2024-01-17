@@ -2,6 +2,13 @@
 
 module Workflows
   class SyncWorkflow < Temporal::Workflow
-    def execute; end
+    include Activities
+    def execute
+      puts "start: SyncWorkflow.execute"
+      Activities::ExtractorActivity.execute
+      Activities::LoaderActivity.execute
+      Activities::ReporterActivity.execute
+      puts "end: SyncWorkflow.execute"
+    end
   end
 end

@@ -2,6 +2,8 @@
 
 module Activities
   class ExtractorActivity < Temporal::Activity
-    def execute; end
+    def execute
+      puts "ExtractorActivity.execute"
+    end
   end
 end
