@@ -12,11 +12,13 @@ module ReverseEtl
         transformer = Transformers::UserMapping.new
         client = sync.destination.connector_client.new
 
+        # TODO: Fetch only records with status pending
         sync_run.sync_records.find_in_batches do |sync_records|
           Parallel.each(sync_records, in_threads: THREAD_COUNT) do |sync_record|
             record = transformer.transform(sync, sync_record)
             report = client.write(sync_config, [record])
             # TODO: Update count in sync or sync run
+            # TODO: Update status of sync recrod using IN query
             puts "success: #{report.tracking.success}"
             puts "failure: #{report.tracking.failed}"
             puts report
