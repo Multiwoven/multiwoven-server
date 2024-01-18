@@ -8,7 +8,7 @@ module Models
       unless context
              .model
              .update(context.model_params)
-             context.fail!(model:)
+        context.fail!(model: context.model)
       end
     end
   end

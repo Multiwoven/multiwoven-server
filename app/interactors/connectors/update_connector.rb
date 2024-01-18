@@ -7,7 +7,7 @@ module Connectors
     def call
       unless context.connector
                     .update(context.connector_params)
-        context.fail!(connector:)
+        context.fail!(connector: context.connector)
       end
     end
   end
