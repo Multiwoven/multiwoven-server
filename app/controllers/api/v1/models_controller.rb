@@ -24,7 +24,6 @@ module Api
           connector:,
           model_params:
         )
-
         if result.success?
           @model = result.model
           render json: @model, status: :created

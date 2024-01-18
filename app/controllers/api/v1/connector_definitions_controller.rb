@@ -20,7 +20,7 @@ module Api
       def check_connection
         connection_status = @connector_client
                             .check_connection(
-                              params[:connection_spec]
+                              params[:connection_spec].to_unsafe_h
                             )
 
         render json: connection_status

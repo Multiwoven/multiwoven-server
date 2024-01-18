@@ -65,9 +65,13 @@ module Api
 
         if result.success?
           @catalog = result.catalog
+          render json: @catalog, status: :ok
         else
-          render json: { errors: result.errors },
-                 status: :unprocessable_entity
+          render_error(
+            message: "Discover catalog failed",
+            status: :unprocessable_entity,
+            details: format_errors(result.catalog)
+          )
         end
       end
 
