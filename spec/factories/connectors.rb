@@ -23,5 +23,7 @@ FactoryBot.define do
     end
     name { Faker::Name.name }
     connector_name { "klaviyo" }
+
+    to_create { |instance| instance.save(validate: false) }
   end
 end
