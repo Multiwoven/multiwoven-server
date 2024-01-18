@@ -14,6 +14,7 @@ module ReverseEtl
 
         # TODO: Fetch only records with status pending
         sync_run.sync_records.find_in_batches do |sync_records|
+          # TODO: Move this to a temporal activity
           Parallel.each(sync_records, in_threads: THREAD_COUNT) do |sync_record|
             record = transformer.transform(sync, sync_record)
             report = client.write(sync_config, [record])

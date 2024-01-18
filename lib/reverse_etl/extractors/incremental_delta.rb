@@ -14,6 +14,7 @@ module ReverseEtl
         model = sync_run.sync.model
 
         ReverseEtl::Utils::BatchQuery.execute_in_batches(batch_query_params) do |records|
+          # TODO: Move this to a temporal activity
           process_records(records, sync_run, model)
         rescue StandardError => e
           Rails.logger.error(e)
