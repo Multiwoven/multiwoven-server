@@ -35,6 +35,19 @@ class Connector < ApplicationRecord
     @connector_definition ||= connector_client.new.meta_data.with_indifferent_access
   end
 
+  def execute_query(query, limit: 50)
+    connection_config = configuration.deep_symbolize_keys
+    db = connector_client.new.send(:create_connection, connection_config)
+    query = query.chomp(';')
+    records = db.exec("#{query} LIMIT #{limit}") do |result|
+      result.map do |row|
+        row
+      end
+    end
+  ensure
+    db&.close
+  end
+
   def configuration_schema
     client = Multiwoven::Integrations::Service
              .connector_class(
