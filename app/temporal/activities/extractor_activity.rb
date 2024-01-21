@@ -2,7 +2,9 @@
 
 module Activities
   class ExtractorActivity < Temporal::Activity
-    def execute(sync_run)
+    def execute(sync_run_id)
+      sync_run = SyncRun.find(sync_run_id)
+
       sync_run.status = "in_progress"
       sync_run.started_at = Time.zone.now
       sync_run.save!
