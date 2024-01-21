@@ -53,7 +53,7 @@ module Api
           )
         end
       end
-      
+
       def preview
         result = ExecuteQuery.call(
           connector: @model.connector,
