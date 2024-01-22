@@ -4,6 +4,7 @@ module ReverseEtl
   module Loaders
     class Standard < Base
       THREAD_COUNT = 10
+      # TODO: write tests for this method
       def write(sync_run_id)
         sync_run = SyncRun.find(sync_run_id)
         sync = sync_run.sync
