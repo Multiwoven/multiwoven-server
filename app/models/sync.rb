@@ -41,6 +41,7 @@ class Sync < ApplicationRecord
   has_many :sync_runs, dependent: :nullify
 
   after_initialize :set_defaults, if: :new_record?
+  after_save :schedule_sync, if: :schedule_sync?
 
   def to_protocol
     catalog = destination.catalog
@@ -74,5 +75,16 @@ class Sync < ApplicationRecord
     else
       raise ArgumentError, "Invalid sync_interval_unit: #{sync_interval_unit}"
     end
+  end
+
+  def schedule_sync?
+    new_record? || saved_change_to_sync_interval? || saved_change_to_sync_interval_unit?
+  end
+
+  def schedule_sync
+    Temporal.start_workflow(
+      Workflows::ScheduleSyncWorkflow,
+      id
+    )
   end
 end

@@ -91,4 +91,44 @@ RSpec.describe Sync, type: :model do
       end
     end
   end
+
+  describe "#schedule_sync" do
+    let(:source) do
+      create(:connector, connector_type: "source", connector_name: "Snowflake")
+    end
+    let(:destination) { create(:connector, connector_type: "destination") }
+    let!(:catalog) { create(:catalog, connector: destination) }
+    let(:sync) { build(:sync, sync_interval: 3, sync_interval_unit: "hours", source:, destination:) }
+
+    before do
+      allow(Temporal).to receive(:start_workflow).and_return(true)
+    end
+
+    context "when a new record is created" do
+      it "schedules a sync workflow" do
+        sync.schedule_sync
+        expect(Temporal).to have_received(:start_workflow).with(
+          Workflows::ScheduleSyncWorkflow,
+          sync.id
+        )
+      end
+    end
+
+    context "when an existing record is updated" do
+      it "schedules a sync workflow if sync interval changes" do
+        sync.sync_interval = 1
+        sync.save(validate: false)
+        expect(Temporal).to have_received(:start_workflow).with(
+          Workflows::ScheduleSyncWorkflow,
+          sync.id
+        )
+      end
+
+      it "does not schedule a sync workflow if sync interval does not change" do
+        sync.primary_key = "primary_key"
+        sync.save
+        expect(Temporal).not_to have_received(:start_workflow)
+      end
+    end
+  end
 end
