@@ -32,7 +32,7 @@ class Sync < ApplicationRecord
   enum :schedule_type, %i[manual automated]
   enum :status, %i[healthy failed aborted in_progress disabled]
   enum :sync_mode, %i[full_refresh incremental]
-  enum :sync_interval_unit, %i[hours days weeks]
+  enum :sync_interval_unit, %i[minutes hours days]
 
   belongs_to :workspace
   belongs_to :source, class_name: "Connector"
@@ -61,17 +61,16 @@ class Sync < ApplicationRecord
   end
 
   def schedule_cron_expression
-    case sync_interval_unit
+    case sync_interval_unit.downcase
+    when "minutes"
+      # Every X minutes: */X * * * *
+      "*/#{sync_interval} * * * *"
     when "hours"
       # Every X hours: 0 */X * * *
       "0 */#{sync_interval} * * *"
     when "days"
       # Every X days: 0 0 */X * *
       "0 0 */#{sync_interval} * *"
-    when "weeks"
-      # Every X weeks: 0 0 * * */X
-      # Note: Cron doesn't directly support weeks, so we use day of week here
-      "0 0 * * */#{sync_interval}"
     else
       raise ArgumentError, "Invalid sync_interval_unit: #{sync_interval_unit}"
     end

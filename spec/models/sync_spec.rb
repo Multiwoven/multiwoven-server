@@ -80,15 +80,6 @@ RSpec.describe Sync, type: :model do
       end
     end
 
-    context "when interval unit is weeks" do
-      let(:sync_interval) { 2 }
-      let(:sync_interval_unit) { "weeks" }
-
-      it "returns the correct cron expression" do
-        expect(sync.schedule_cron_expression).to eq("0 0 * * */2")
-      end
-    end
-
     context "when interval unit is invalid" do
       let(:sync_interval) { 1 }
       let(:sync_interval_unit) { "invalid" }
