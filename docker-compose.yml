@@ -1,5 +1,6 @@
 version: '3'
-
+include:
+  - temporal-docker-compose.yml
 services:
   db:
     image: postgres:latest
@@ -23,6 +24,7 @@ services:
     depends_on:
       - db
       - redis
+      - temporal
     environment:
       RAILS_ENV: development
       REDIS_URL: redis://redis:6379/0
@@ -33,6 +35,12 @@ services:
       SMTP_USERNAME: ${SMTP_USERNAME}
       SMTP_PASSWORD: ${SMTP_PASSWORD}
       NEW_RELIC_KEY: ${NEW_RELIC_KEY}
+      TEMPORAL_VERSION: ${TEMPORAL_VERSION}
+      TEMPORAL_UI_VERSION: ${TEMPORAL_UI_VERSION}
+      TEMPORAL_HOST: ${TEMPORAL_HOST}
+      TEMPORAL_PORT: ${TEMPORAL_PORT}
+      TEMPORAL_NAMESPACE: ${TEMPORAL_NAMESPACE}
+      TEMPORAL_TASK_QUEUE: ${TEMPORAL_TASK_QUEUE}
     volumes:
       - .:/rails
 
