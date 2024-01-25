@@ -82,7 +82,7 @@ module Api
             query: params[:query],
             limit: params[:limit] || 50
           )
-          
+
           if result.success?
             @records = result.records
             render json: @records, status: :ok
