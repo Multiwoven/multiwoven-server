@@ -8,6 +8,7 @@ worker = Temporal::Worker.new(binary_checksum: `git show HEAD -s --format=%H`.st
 worker.register_workflow(Workflows::SyncWorkflow)
 worker.register_workflow(Workflows::ScheduleSyncWorkflow)
 
+worker.add_activity_middleware(Middlewares::DatabaseMiddleware)
 worker.register_activity(Activities::FetchSyncActivity)
 worker.register_activity(Activities::CreateSyncRunActivity)
 worker.register_activity(Activities::ExtractorActivity)
