@@ -7,7 +7,7 @@ module Api
       attr_reader :connector, :model
 
       before_action :set_connector, only: %i[create]
-      before_action :set_model, only: %i[show update destroy preview]
+      before_action :set_model, only: %i[show update destroy]
 
       def index
         @models = current_workspace
