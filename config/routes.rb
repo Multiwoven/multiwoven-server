@@ -22,6 +22,7 @@ Rails.application.routes.draw do
       resources :connectors do
         member do
           get :discover
+          post :query_source
         end
       end
       resources :models do
