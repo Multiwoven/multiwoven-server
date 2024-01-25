@@ -5,18 +5,10 @@ module Connectors
     include Interactor
 
     def call
-      result = Models::ExecuteQuery.call(
-        connector: context.connector,
-        query: context.query,
-        limit: context.limit
-      )
-      if result["errors"].present?
-        context.fail!(error: (result["errors"]).to_s)
-      else
-        context.records = result.records
-      end
+      result = context.connector.execute_query(context.query, limit: context.limit)
+      context.records = result
     rescue StandardError => e
-      context.fail!(errors: e.message)
+      context.fail!(error: e.message)
     end
   end
 end

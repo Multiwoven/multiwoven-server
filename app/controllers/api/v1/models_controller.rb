@@ -54,24 +54,6 @@ module Api
         end
       end
 
-      def preview
-        result = ExecuteQuery.call(
-          connector: @model.connector,
-          query: @model.query,
-          limit: params[:limit] || 50
-        )
-
-        if result.success?
-          render json: result.records, status: :ok
-        else
-          render_error(
-            message: "Query execution failed",
-            status: :unprocessable_entity,
-            details: result.errors
-          )
-        end
-      end
-
       def destroy
         model.destroy!
         head :no_content

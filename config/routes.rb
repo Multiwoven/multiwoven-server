@@ -25,11 +25,7 @@ Rails.application.routes.draw do
           post :query_source
         end
       end
-      resources :models do
-        member do
-          get :preview
-        end
-      end
+      resources :models
       resources :syncs
       resources :connector_definitions, only: [:index, :show] do
         collection do
