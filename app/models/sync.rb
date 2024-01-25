@@ -81,13 +81,11 @@ class Sync < ApplicationRecord
   end
 
   def schedule_sync
-    begin
-      Temporal.start_workflow(
-        Workflows::ScheduleSyncWorkflow,
-        id
-      )
-    rescue => e
-      Rails.logger.error "Failed to schedule sync with Temporal. Error: #{e.message}"
-    end
-  end  
+    Temporal.start_workflow(
+      Workflows::ScheduleSyncWorkflow,
+      id
+    )
+  rescue StandardError => e
+    Rails.logger.error "Failed to schedule sync with Temporal. Error: #{e.message}"
+  end
 end
