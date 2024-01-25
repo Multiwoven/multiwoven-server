@@ -11,8 +11,7 @@
 #  destination_id    :integer
 #  configuration     :jsonb
 #  source_catalog_id :integer
-#  schedule_type     :integer
-#  schedule_data     :jsonb
+#  schedule_type     :string
 #  status            :integer
 #  created_at        :datetime         not null
 #  updated_at        :datetime         not null
@@ -82,9 +81,13 @@ class Sync < ApplicationRecord
   end
 
   def schedule_sync
-    Temporal.start_workflow(
-      Workflows::ScheduleSyncWorkflow,
-      id
-    )
-  end
+    begin
+      Temporal.start_workflow(
+        Workflows::ScheduleSyncWorkflow,
+        id
+      )
+    rescue => e
+      Rails.logger.error "Failed to schedule sync with Temporal. Error: #{e.message}"
+    end
+  end  
 end
