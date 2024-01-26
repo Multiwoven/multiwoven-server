@@ -1,4 +1,4 @@
-version: '3'
+version: "3"
 
 services:
   db:
@@ -35,6 +35,8 @@ services:
       NEW_RELIC_KEY: ${NEW_RELIC_KEY}
     volumes:
       - .:/rails
+    tty: true
+    stdin_open: true
 
 volumes:
   mw-pg-data:
