@@ -25,24 +25,11 @@ services:
       - db
       - redis
       - temporal
-    environment:
-      RAILS_ENV: development
-      REDIS_URL: redis://redis:6379/0
-      DB_HOST: ${DB_HOST}
-      DB_USERNAME: ${DB_USERNAME}
-      DB_PASSWORD: ${DB_PASSWORD}
-      SMTP_ADDRESS: ${SMTP_ADDRESS}
-      SMTP_USERNAME: ${SMTP_USERNAME}
-      SMTP_PASSWORD: ${SMTP_PASSWORD}
-      NEW_RELIC_KEY: ${NEW_RELIC_KEY}
-      TEMPORAL_VERSION: ${TEMPORAL_VERSION}
-      TEMPORAL_UI_VERSION: ${TEMPORAL_UI_VERSION}
-      TEMPORAL_HOST: ${TEMPORAL_HOST}
-      TEMPORAL_PORT: ${TEMPORAL_PORT}
-      TEMPORAL_NAMESPACE: ${TEMPORAL_NAMESPACE}
-      TEMPORAL_TASK_QUEUE: ${TEMPORAL_TASK_QUEUE}
+    env_file: .env
     volumes:
       - .:/rails
+    stdin_open: true
+    tty: true
 
   multiwoven-worker:
     build:
@@ -52,21 +39,10 @@ services:
       - db
       - redis
       - temporal
-    environment:
-      RAILS_ENV: development
-      REDIS_URL: redis://redis:6379/0
-      DB_HOST: ${DB_HOST}
-      DB_USERNAME: ${DB_USERNAME}
-      DB_PASSWORD: ${DB_PASSWORD}
-      TEMPORAL_VERSION: ${TEMPORAL_VERSION}
-      TEMPORAL_UI_VERSION: ${TEMPORAL_UI_VERSION}
-      TEMPORAL_HOST: ${TEMPORAL_HOST}
-      TEMPORAL_PORT: ${TEMPORAL_PORT}
-      TEMPORAL_NAMESPACE: ${TEMPORAL_NAMESPACE}
-      TEMPORAL_TASK_QUEUE: ${TEMPORAL_TASK_QUEUE}
+    env_file: .env
     volumes:
       - .:/rails
-    command: ./app/temporal/cli/worker
+    command: sh -c "./app/temporal/cli/register_namespace && ./app/temporal/cli/worker"
 
 volumes:
   mw-pg-data:
