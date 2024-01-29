@@ -26,6 +26,7 @@ RSpec.describe "Api::V1::ConnectorsController", type: :request do
         expect(response).to have_http_status(:ok)
         response_hash = JSON.parse(response.body).with_indifferent_access
         expect(response_hash[:data].count).to eql(connectors.count)
+        expect(response_hash.dig(:data, 0, :type)).to eq("connectors")
       end
 
       it "returns success and all source connectors" do
@@ -33,6 +34,7 @@ RSpec.describe "Api::V1::ConnectorsController", type: :request do
         expect(response).to have_http_status(:ok)
         response_hash = JSON.parse(response.body).with_indifferent_access
         expect(response_hash[:data].count).to eql(1)
+        expect(response_hash.dig(:data, 0, :type)).to eq("connectors")
         expect(response_hash.dig(:data, 0, :attributes, :connector_type)).to eql("source")
       end
 
@@ -41,6 +43,7 @@ RSpec.describe "Api::V1::ConnectorsController", type: :request do
         expect(response).to have_http_status(:ok)
         response_hash = JSON.parse(response.body).with_indifferent_access
         expect(response_hash[:data].count).to eql(1)
+        expect(response_hash.dig(:data, 0, :type)).to eq("connectors")
         expect(response_hash.dig(:data, 0, :attributes, :connector_type)).to eql("destination")
       end
 
@@ -66,6 +69,7 @@ RSpec.describe "Api::V1::ConnectorsController", type: :request do
         response_hash = JSON.parse(response.body).with_indifferent_access
         expect(response_hash.dig(:data, :id)).to be_present
         expect(response_hash.dig(:data, :id)).to eq(connectors.first.id.to_s)
+        expect(response_hash.dig(:data, :type)).to eq("connectors")
         expect(response_hash.dig(:data, :attributes, :workspace_id)).to eq(workspace.id)
         expect(response_hash.dig(:data, :attributes, :connector_type)).to eq(connectors.first.connector_type)
         expect(response_hash.dig(:data, :attributes, :name)).to eq(connectors.first.name)
@@ -115,6 +119,7 @@ RSpec.describe "Api::V1::ConnectorsController", type: :request do
         expect(response).to have_http_status(:created)
         response_hash = JSON.parse(response.body).with_indifferent_access
         expect(response_hash.dig(:data, :id)).to be_present
+        expect(response_hash.dig(:data, :type)).to eq("connectors")
         expect(response_hash.dig(:data, :attributes, :workspace_id)).to eq(workspace.id)
         expect(response_hash.dig(:data, :attributes, :connector_type)).to eq("source")
         expect(response_hash.dig(:data, :attributes, :name)).to eq("AWS Redshift")
@@ -165,6 +170,7 @@ RSpec.describe "Api::V1::ConnectorsController", type: :request do
         response_hash = JSON.parse(response.body).with_indifferent_access
         expect(response_hash.dig(:data, :id)).to be_present
         expect(response_hash.dig(:data, :id)).to eq(connectors.second.id.to_s)
+        expect(response_hash.dig(:data, :type)).to eq("connectors")
         expect(response_hash.dig(:data, :attributes, :name)).to eq("AWS Redshift")
       end
 
@@ -191,6 +197,7 @@ RSpec.describe "Api::V1::ConnectorsController", type: :request do
         expect(response).to have_http_status(:ok)
         response_hash = JSON.parse(response.body).with_indifferent_access
         expect(response_hash.dig(:data, :id)).to be_present
+        expect(response_hash.dig(:data, :type)).to eq("catalogs")
         expect(response_hash.dig(:data, :attributes, :workspace_id)).to eq(workspace.id)
         expect(response_hash.dig(:data, :attributes, :connector_id)).to eq(connectors.first.id)
         expect(response_hash.dig(:data, :attributes, :catalog)).to be_present
@@ -205,4 +212,27 @@ RSpec.describe "Api::V1::ConnectorsController", type: :request do
       end
     end
   end
+
+  describe "DELETE /api/v1/connectors/id" do
+    context "when it is an unauthenticated user" do
+      it "returns unauthorized" do
+        delete "/api/v1/connectors/#{connectors.first.id}"
+        expect(response).to have_http_status(:unauthorized)
+      end
+    end
+
+    context "when it is an authenticated user" do
+      it "returns success and delete connector" do
+        delete "/api/v1/connectors/#{connectors.first.id}", headers: auth_headers(user)
+        expect(response).to have_http_status(:no_content)
+      end
+
+      it "returns an error response while delete wrong connector" do
+        delete "/api/v1/connectors/test", headers: auth_headers(user)
+        expect(response).to have_http_status(:not_found)
+      end
+    end
+  end
+
+  # TODO: query_source
 end
