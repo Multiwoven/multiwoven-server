@@ -5,7 +5,9 @@ require "rails_helper"
 RSpec.describe "Api::V1::ConnectorsController", type: :request do
   let(:workspace) { create(:workspace) }
   let(:user) { workspace.workspace_users.first.user }
-  let(:connector) { create(:connector, workspace:, connector_type: "destination", name: "klavio1", connector_name: "Klaviyo") }
+  let(:connector) do
+    create(:connector, workspace:, connector_type: "destination", name: "klavio1", connector_name: "Klaviyo")
+  end
   let!(:models) do
     [
       create(:model, connector:, workspace:, name: "model1", query: "SELECT * FROM locations"),
@@ -137,8 +139,7 @@ RSpec.describe "Api::V1::ConnectorsController", type: :request do
         expect(response_hash.dig(:data, :attributes, :primary_key)).to eq(request_body.dig(:model, :primary_key))
       end
 
-      it "returns an error response when wrong fails" do
-        request_body[:model][:connector_id] = "connector_id_wrong"
+      it "returns an error response when wrong model_id" do
         put "/api/v1/models/test", params: request_body.to_json, headers:
           { "Content-Type": "application/json" }.merge(auth_headers(user))
         expect(response).to have_http_status(:not_found)
