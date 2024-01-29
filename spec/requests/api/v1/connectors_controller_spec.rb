@@ -46,9 +46,7 @@ RSpec.describe "Api::V1::ConnectorsController", type: :request do
 
       it "returns an error response for connectors" do
         get "/api/v1/connectors?type=destination1", headers: auth_headers(user)
-        expect(response).to have_http_status(:unprocessable_entity)
-        response_hash = JSON.parse(response.body).with_indifferent_access
-        expect(response_hash.dig(:errors, 0, :detail)).to eq("Get all connectors failed")
+        expect(response).to have_http_status(:bad_request)
       end
     end
   end
@@ -127,9 +125,7 @@ RSpec.describe "Api::V1::ConnectorsController", type: :request do
         request_body[:connector][:connector_type] = "connector_type_wrong"
         post "/api/v1/connectors", params: request_body.to_json, headers: { "Content-Type": "application/json" }
           .merge(auth_headers(user))
-        expect(response).to have_http_status(:unprocessable_entity)
-        response_hash = JSON.parse(response.body).with_indifferent_access
-        expect(response_hash.dig(:errors, 0, :detail)).to eq("Connector creation failed")
+        expect(response).to have_http_status(:bad_request)
       end
     end
   end
@@ -176,9 +172,7 @@ RSpec.describe "Api::V1::ConnectorsController", type: :request do
         request_body[:connector][:connector_type] = "connector_type_wrong"
         put "/api/v1/connectors/#{connectors.second.id}", params: request_body.to_json, headers:
           { "Content-Type": "application/json" }.merge(auth_headers(user))
-        expect(response).to have_http_status(:unprocessable_entity)
-        response_hash = JSON.parse(response.body).with_indifferent_access
-        expect(response_hash.dig(:errors, 0, :detail)).to eq("Connector update failed")
+        expect(response).to have_http_status(:bad_request)
       end
     end
   end

@@ -11,22 +11,10 @@ module Api
         @connectors = @connectors.send(params[:type].downcase) if params[:type]
         @connectors = @connectors.page(params[:page] || 1)
         render json: @connectors, status: :ok
-      rescue StandardError => e
-        render_error(
-          message: "Get all connectors failed",
-          status: :unprocessable_entity,
-          details: e.message
-        )
       end
 
       def show
         render json: @connector, status: :ok
-      rescue ActiveRecord::RecordNotFound
-        render_error(
-          message: "Connector not found",
-          status: :not_found,
-          details: e.message
-        )
       end
 
       def create
@@ -45,12 +33,6 @@ module Api
             details: format_errors(result.connector)
           )
         end
-      rescue StandardError => e
-        render_error(
-          message: "Connector creation failed",
-          status: :unprocessable_entity,
-          details: e.message
-        )
       end
 
       def update
@@ -69,12 +51,6 @@ module Api
             details: format_errors(result.connector)
           )
         end
-      rescue StandardError => e
-        render_error(
-          message: "Connector update failed",
-          status: :unprocessable_entity,
-          details: e.message
-        )
       end
 
       def destroy
