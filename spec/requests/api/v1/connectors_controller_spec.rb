@@ -234,5 +234,44 @@ RSpec.describe "Api::V1::ConnectorsController", type: :request do
     end
   end
 
-  # TODO: query_source
+  describe "POST /api/v1/connectors/id/query_source" do
+    let(:connector) { create(:connector, connector_type: "source") }
+    let(:query) { "SELECT * FROM table_name" }
+    let(:limit) { 50 }
+    let(:mock_records) { [{ "column1" => "value1" }, { "column2" => "value2" }] }
+
+    let(:request_body) do
+      {
+        query: "SELECT * FROM table_name"
+      }
+    end
+
+    context "when it is an unauthenticated user" do
+      it "returns unauthorized" do
+        post "/api/v1/connectors/#{connectors.second.id}/query_source"
+        expect(response).to have_http_status(:unauthorized)
+      end
+    end
+
+    context "when it is an authenticated user" do
+      it "returns success status for a valid query" do
+        allow(Connectors::QuerySource).to receive(:call)
+          .and_return(double(:context, success?: true, records: mock_records))
+        post "/api/v1/connectors/#{connectors.second.id}/query_source", params: request_body.to_json, headers:
+          { "Content-Type": "application/json" }.merge(auth_headers(user))
+        expect(response).to have_http_status(:ok)
+        response_hash = JSON.parse(response.body)
+        expect(response_hash).to eq(mock_records)
+      end
+
+      it "returns failure status for a invalid query" do
+        allow(Connectors::QuerySource).to receive(:call).and_raise(StandardError, "query failed")
+
+        post "/api/v1/connectors/#{connectors.second.id}/query_source", params: request_body.to_json, headers:
+          { "Content-Type": "application/json" }.merge(auth_headers(user))
+
+        expect(response).to have_http_status(:bad_request)
+      end
+    end
+  end
 end
