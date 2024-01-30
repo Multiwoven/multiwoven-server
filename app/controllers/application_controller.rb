@@ -4,8 +4,20 @@ class ApplicationController < ActionController::API
   include Devise::Controllers::Helpers
   include ExceptionHandler
 
-  before_action :authenticate_user!
+  before_action :authenticate_user!, except: [:serve_asset]
   around_action :handle_with_exception
+
+  # Action to serve files from public/assets
+  def serve_asset
+    filename = params[:filename]
+    filepath = Rails.root.join("public", "assets", filename)
+
+    if File.exist?(filepath)
+      send_file filepath, disposition: "inline"
+    else
+      render status: :not_found, json: { error: "File not found" }
+    end
+  end
 
   private
 

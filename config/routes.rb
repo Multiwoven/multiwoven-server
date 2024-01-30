@@ -2,6 +2,8 @@ Rails.application.routes.draw do
   devise_for :users
   # Health Check
   get "up" => "rails/health#show", as: :rails_health_check
+  # Dynamic route to serve files from public/assets
+  get '*filename', to: 'application#serve_asset', constraints: { filename: /.+\..+/ }
 
   # API routes
   namespace :api do
