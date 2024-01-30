@@ -32,7 +32,6 @@ module Api
 
       # PUT /api/v1/workspaces/:workspace_id/workspace_users/:id
       def update
-        byebug
         result = Update.call(id: params[:id], role: workspace_user_params[:role])
 
         if result.success?
