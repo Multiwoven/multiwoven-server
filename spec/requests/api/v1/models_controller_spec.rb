@@ -2,7 +2,7 @@
 
 require "rails_helper"
 
-RSpec.describe "Api::V1::ConnectorsController", type: :request do
+RSpec.describe "Api::V1::ModelsController", type: :request do
   let(:workspace) { create(:workspace) }
   let(:user) { workspace.workspace_users.first.user }
   let(:connector) do

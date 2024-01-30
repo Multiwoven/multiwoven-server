@@ -2,7 +2,7 @@
 
 require "rails_helper"
 
-RSpec.describe "Api::V1::ConnectorsController", type: :request do
+RSpec.describe "Api::V1::WorkspacesController", type: :request do
   let(:workspace) { create(:workspace) }
   let(:user) { workspace.workspace_users.first.user }
 
@@ -66,7 +66,7 @@ RSpec.describe "Api::V1::ConnectorsController", type: :request do
     end
   end
 
-  describe "PUT /api/v1/workspaces - Update workspace" do
+  describe "PUT /api/v1/workspaces/id - Update workspace" do
     let(:request_body) do
       {
         workspace: {
