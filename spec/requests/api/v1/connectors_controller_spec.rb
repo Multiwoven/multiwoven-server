@@ -90,11 +90,8 @@ RSpec.describe "Api::V1::ConnectorsController", type: :request do
       connector: {
         connector_type: "source",
         configuration: {
-          credentials: {
-            auth_type: "username/password",
-            username: "test",
-            password: "test"
-          },
+          username: "test",
+          password: "test",
           host: "redshift-serverless.amazonaws.com",
           port: "5439",
           database: "dev",
@@ -116,6 +113,7 @@ RSpec.describe "Api::V1::ConnectorsController", type: :request do
       it "creates a new connector and returns success" do
         post "/api/v1/connectors", params: request_body.to_json, headers: { "Content-Type": "application/json" }
           .merge(auth_headers(user))
+
         expect(response).to have_http_status(:created)
         response_hash = JSON.parse(response.body).with_indifferent_access
         expect(response_hash.dig(:data, :id)).to be_present
@@ -140,11 +138,8 @@ RSpec.describe "Api::V1::ConnectorsController", type: :request do
       connector: {
         connector_type: "source",
         configuration: {
-          credentials: {
-            auth_type: "username/password",
-            username: "test",
-            password: "test"
-          },
+          username: "test",
+          password: "test",
           host: "redshift-serverless.amazonaws.com",
           port: "5439",
           database: "dev",
