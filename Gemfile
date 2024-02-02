@@ -11,8 +11,7 @@ gem "interactor", "~> 3.0"
 
 gem "ruby-odbc", git: "https://github.com/Multiwoven/ruby-odbc.git"
 
-gem "multiwoven-integrations", git: "https://github.com/Multiwoven/multiwoven-integrations.git",
-                               branch: "snowflake_driver"
+gem "multiwoven-integrations", "~> 0.1.11"
 
 gem "temporal-ruby", github: "coinbase/temporal-ruby"
 
