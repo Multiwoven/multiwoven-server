@@ -36,12 +36,12 @@ RUN ./configure && \
     make && \
     make install
 
-
+# Install iodbc
 RUN apt-get update -qq && \
     apt-get install -y libiodbc2 && \
     rm -rf /var/lib/apt/lists/*
 
-
+# Hack for snowflake odbc driver
 RUN apt-get update -qq && \
     apt-get install -y unixodbc && \
     rm -rf /var/lib/apt/lists/*
