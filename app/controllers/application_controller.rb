@@ -3,7 +3,7 @@
 class ApplicationController < ActionController::API
   include Devise::Controllers::Helpers
   include ExceptionHandler
-
+  include Tracker
   before_action :authenticate_user!
   around_action :handle_with_exception
 
@@ -19,6 +19,10 @@ class ApplicationController < ActionController::API
 
   def current_workspace
     @current_workspace ||= current_user.workspaces.first
+  end
+
+  def current_organization
+    @current_organization ||= current_workspace.organization
   end
 
   protected

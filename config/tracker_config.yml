@@ -1,0 +1,10 @@
+
+events:
+  connectors:
+    created: "Created Connector"
+    updated: "Updated Connector"
+    deleted: "Deleted Connector"
+    viewed: "Viewed Connector"
+    viewed_all: "Viewed Connectors"
+    discovered_catalog: "Discovered Catalog"
+    queried_source: "Queried Source"
