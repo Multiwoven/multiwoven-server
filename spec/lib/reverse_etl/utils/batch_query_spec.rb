@@ -21,7 +21,7 @@ module ReverseEtl
           end
         end
 
-       it "executes batches correctly" do
+        it "executes batches correctly" do
           params = {
             offset: 0,
             limit: 100,
