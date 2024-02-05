@@ -5,6 +5,7 @@ module Api
   module V1
     class WorkspacesController < ApplicationController
       include Workspaces
+      skip_after_action :event_logger
 
       def index
         result = ListAll.call(user: current_user)

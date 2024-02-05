@@ -5,6 +5,7 @@ module Api
     class ConnectorDefinitionsController < ApplicationController
       before_action :set_connectors, only: %i[show index]
       before_action :set_connector_client, only: %i[check_connection]
+      skip_after_action :event_logger
 
       def index
         render json: @connectors

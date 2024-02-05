@@ -1,10 +1,5 @@
 # frozen_string_literal: true
 
-require "net/http"
-require "uri"
-require "json"
-require "securerandom"
-
 module ScriptVault
   module Tracker
     def self.included(base)
