@@ -6,6 +6,7 @@ module Api
       include WorkspaceUsers
       before_action :set_workspace
       before_action :authorize_admin!, except: [:index]
+      skip_after_action :event_logger
 
       # POST /api/v1/workspaces/:workspace_id/workspace_users
       def create
