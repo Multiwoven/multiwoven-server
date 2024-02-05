@@ -11,12 +11,10 @@ module Api
       def index
         @syncs = current_workspace
                  .syncs.all.page(params[:page] || 1)
-        _track_event(TRACKER["events"]["syncs"]["viewed_all"], { count: @syncs.count })
         render json: @syncs, status: :ok
       end
 
       def show
-        _track_event(TRACKER["events"]["syncs"]["viewed"], { sync_id: @sync.id })
         render json: @sync, status: :ok
       end
 
@@ -28,7 +26,6 @@ module Api
 
         if result.success?
           @sync = result.sync
-          _track_event(TRACKER["events"]["syncs"]["created"], { sync_id: @sync.id })
           render json: @sync, status: :created
         else
           render_error(
@@ -47,7 +44,6 @@ module Api
 
         if result.success?
           @sync = result.sync
-          _track_event(TRACKER["events"]["syncs"]["updated"], { sync_id: @sync.id })
           render json: @sync, status: :ok
         else
           render_error(
@@ -59,7 +55,6 @@ module Api
       end
 
       def destroy
-        _track_event(TRACKER["events"]["syncs"]["deleted"], { sync_id: @sync.id })
         sync.destroy!
         head :no_content
       end

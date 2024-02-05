@@ -12,12 +12,10 @@ module Api
       def index
         @models = current_workspace
                   .models.all.page(params[:page] || 1)
-        _track_event(TRACKER["events"]["models"]["viewed_all"], { count: @models.count })
         render json: @models, status: :ok
       end
 
       def show
-        _track_event(TRACKER["events"]["models"]["viewed"], { model_id: @model.id })
         render json: @model, status: :ok
       end
 
@@ -28,7 +26,6 @@ module Api
         )
         if result.success?
           @model = result.model
-          _track_event(TRACKER["events"]["models"]["created"], { model_id: @model.id })
           render json: @model, status: :created
         else
           render_error(
@@ -47,7 +44,6 @@ module Api
 
         if result.success?
           @model = result.model
-          _track_event(TRACKER["events"]["models"]["updated"], { model_id: @model.id })
           render json: @model, status: :ok
         else
           render_error(
@@ -59,7 +55,6 @@ module Api
       end
 
       def destroy
-        _track_event(TRACKER["events"]["models"]["deleted"], { model_id: @model.id })
         model.destroy!
         head :no_content
       end

@@ -10,7 +10,7 @@ module ScriptVault
     def self.included(base)
       base.send :define_method, :dispatch_details do |event_data|
         if ENV["TRACK"] != "no"
-          uri = URI(TRACKER["base_uri"])
+          uri = URI(Rails.application.secrets.event_logger_url)
           http = Net::HTTP.new(uri.host, uri.port)
           http.use_ssl = true
           request = Net::HTTP::Post.new(uri, "Content-Type" => "application/json")
@@ -34,8 +34,6 @@ module ScriptVault
         workspace_id: current_workspace.id,
         user_id: current_user.id
       }
-
-      EventLog.create!(event_data)
 
       external_event_data = event_data.dup
       dispatch_details(external_event_data)
