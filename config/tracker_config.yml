@@ -1,4 +1,4 @@
-
+base_uri: "https://pixel-path.multiwoven.com/trackr"
 events:
   connectors:
     created: "Created Connector"
