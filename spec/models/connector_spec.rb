@@ -59,10 +59,10 @@ RSpec.describe Connector, type: :model do
     let(:workspace) { create(:workspace) } # Assuming you have factories set up for workspace
     let(:connector) do
       create(:connector,
-            workspace: workspace,
-            connector_type: :source,
-            connector_name: "snowflake",
-            configuration: { user: "test", password: "password" }) # Adjust attributes as necessary
+             workspace:,
+             connector_type: :source,
+             connector_name: "snowflake",
+             configuration: { user: "test", password: "password" }) # Adjust attributes as necessary
     end
     let(:client_double) { instance_double("SomeClient") }
     let(:db_connection) { instance_double("SomeDBConnection") }
