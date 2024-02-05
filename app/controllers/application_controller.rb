@@ -5,8 +5,8 @@ class ApplicationController < ActionController::API
   include ExceptionHandler
   include ScriptVault::Tracker
   before_action :authenticate_user!
-  # around_action :handle_with_exception
-  after_action :event_logger
+  around_action :handle_with_exception
+  
 
   private
 
