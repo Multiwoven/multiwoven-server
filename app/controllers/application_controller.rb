@@ -3,7 +3,7 @@
 class ApplicationController < ActionController::API
   include Devise::Controllers::Helpers
   include ExceptionHandler
-  include ScriptVault::Tracker
+  # include ScriptVault::Tracker
   before_action :authenticate_user!
   around_action :handle_with_exception
   # after_action :event_logger
