@@ -10,14 +10,15 @@ module Api
         @connectors = current_workspace.connectors
         @connectors = @connectors.send(params[:type].downcase) if params[:type]
         @connectors = @connectors.page(params[:page] || 1)
-        _track_event(TRACKER["events"]["connectors"]["viewed_all"], {})
+        _track_event(TRACKER["events"]["connectors"]["viewed_all"], { count: @connectors.count })
         render json: @connectors, status: :ok
       end
 
       def show
         render json: @connector, status: :ok
         _track_event(TRACKER["events"]["connectors"]["viewed"],
-                     { connector_type: @connector.connector_type, connector_name: @connector.connector_name })
+                     { connector_id: @connector.id, connector_type: @connector.connector_type,
+                       connector_name: @connector.connector_name })
       end
 
       def create
@@ -29,7 +30,8 @@ module Api
         if result.success?
           @connector = result.connector
           _track_event(TRACKER["events"]["connectors"]["created"],
-                       { connector_type: @connector.connector_type, connector_name: @connector.connector_name })
+                       { connector_id: @connector.id, connector_type: @connector.connector_type,
+                         connector_name: @connector.connector_name })
           render json: @connector, status: :created
         else
           render_error(
@@ -49,7 +51,8 @@ module Api
         if result.success?
           @connector = result.connector
           _track_event(TRACKER["events"]["connectors"]["updated"],
-                       { connector_type: @connector.connector_type, connector_name: @connector.connector_name })
+                       { connector_id: @connector.id, connector_type: @connector.connector_type,
+                         connector_name: @connector.connector_name })
           render json: @connector, status: :ok
         else
           render_error(
@@ -62,7 +65,8 @@ module Api
 
       def destroy
         _track_event(TRACKER["events"]["connectors"]["deleted"],
-                     { connector_type: @connector.connector_type, connector_name: @connector.connector_name })
+                     { connector_id: @connector.id, connector_type: @connector.connector_type,
+                       connector_name: @connector.connector_name })
         @connector.destroy!
         head :no_content
       end
@@ -75,7 +79,8 @@ module Api
         if result.success?
           @catalog = result.catalog
           _track_event("Discovered Catalog",
-                       { connector_type: @connector.connector_type, connector_name: @connector.connector_name })
+                       { connector_id: @connector.id, connector_type: @connector.connector_type,
+                         connector_name: @connector.connector_name })
           render json: @catalog, status: :ok
         else
           render_error(
@@ -97,7 +102,8 @@ module Api
           if result.success?
             @records = result.records
             _track_event(TRACKER["events"]["connectors"]["queried"],
-                         { connector_type: @connector.connector_type, connector_name: @connector.connector_name })
+                         { connector_id: @connector.id, connector_type: @connector.connector_type,
+                           connector_name: @connector.connector_name })
             render json: @records, status: :ok
           else
             render_error(

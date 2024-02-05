@@ -8,3 +8,15 @@ events:
     viewed_all: "Viewed Connectors"
     discovered_catalog: "Discovered Catalog"
     queried_source: "Queried Source"
+  models:
+    created: "Created Model"
+    updated: "Updated Model"
+    deleted: "Deleted Model"
+    viewed: "Viewed Model"
+    viewed_all: "Viewed Models"
+  syncs:
+    created: "Created Sync"
+    updated: "Updated Sync"
+    deleted: "Deleted Sync"
+    viewed: "Viewed Sync"
+    viewed_all: "Viewed Syncs"
