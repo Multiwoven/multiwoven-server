@@ -55,7 +55,7 @@ ENV LD_LIBRARY_PATH=/usr/local/lib:${LD_LIBRARY_PATH}
 ARG TARGETARCH=amd64
 
 RUN if [ "$TARGETARCH" = "amd64" ] || [ "$TARGETARCH" = "x86_64" ]; then \
-        wget https://sfc-repo.snowflakecomputing.com/odbc/linux/x86_64/latest/snowflake-odbc.deb -O snowflake-odbc.deb && \
+        wget https://sfc-repo.snowflakecomputing.com/odbc/linux/latest/snowflake-odbc-3.2.0.x86_64.deb -O snowflake-odbc.deb && \
         dpkg -i snowflake-odbc.deb || apt-get -y -f install; \
     elif [ "$TARGETARCH" = "arm64" ] || [ "$TARGETARCH" = "aarch64" ]; then \
         wget https://sfc-repo.snowflakecomputing.com/odbc/linuxaarch64/3.2.0/snowflake-odbc-3.2.0.aarch64.deb -O snowflake-odbc.deb && \
