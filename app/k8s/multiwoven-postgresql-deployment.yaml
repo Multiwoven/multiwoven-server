@@ -1,12 +1,9 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  annotations:
-    kompose.cmd: kompose convert
-    kompose.version: 1.32.0 (HEAD)
+  name: multiwoven-postgresql
   labels:
     io.kompose.service: multiwoven-postgresql
-  name: multiwoven-postgresql
 spec:
   replicas: 1
   selector:
@@ -16,15 +13,16 @@ spec:
     type: Recreate
   template:
     metadata:
-      annotations:
-        kompose.cmd: kompose convert
-        kompose.version: 1.32.0 (HEAD)
       labels:
         io.kompose.network/multiwoven-server-default: "true"
         io.kompose.service: multiwoven-postgresql
     spec:
       containers:
-        - env:
+        - name: multiwoven-postgresql
+          image: postgres:13
+          ports:
+            - containerPort: 5432
+          env:
             - name: POSTGRES_PASSWORD
               valueFrom:
                 configMapKeyRef:
@@ -35,16 +33,26 @@ spec:
                 configMapKeyRef:
                   name: multiwoven-config
                   key: DB_USERNAME
-          image: postgres:13
-          name: multiwoven-postgresql
-          ports:
-            - containerPort: 5432
-              hostPort: 5432
-              protocol: TCP
           volumeMounts:
             - mountPath: /var/lib/postgresql/data
               name: multiwoven-postgresql-pvc
-      restartPolicy: Always
+          resources:
+            requests:
+              cpu: "500m"
+              memory: "1Gi"
+            limits:
+              cpu: "1"
+              memory: "2Gi"
+          livenessProbe:
+            tcpSocket:
+              port: 5432
+            initialDelaySeconds: 30
+            periodSeconds: 10
+          readinessProbe:
+            tcpSocket:
+              port: 5432
+            initialDelaySeconds: 5
+            periodSeconds: 10
       volumes:
         - name: multiwoven-postgresql-pvc
           persistentVolumeClaim:

@@ -1,16 +1,15 @@
 apiVersion: v1
 kind: Service
 metadata:
-  annotations:
-    kompose.cmd: kompose convert
-    kompose.version: 1.32.0 (HEAD)
   labels:
     io.kompose.service: multiwoven-postgresql
   name: multiwoven-postgresql
 spec:
+  type: ClusterIP
   ports:
-    - name: "5432"
+    - name: postgres
       port: 5432
       targetPort: 5432
   selector:
     io.kompose.service: multiwoven-postgresql
+
