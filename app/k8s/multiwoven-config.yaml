@@ -1,10 +1,15 @@
 apiVersion: v1
 data:
   API_HOST: localhost:3000
+  UI_HOST: localhost:8000
+
+  # Postgres database
   DB_HOST: multiwoven-postgresql
   DB_PASSWORD: password
   DB_USERNAME: multiwoven
-  DB_PORT: "5432"
+  DB_PORT: 5432
+
+  # App
   NEW_RELIC_KEY: yourkey
   RAILS_ENV: development
   SMTP_ADDRESS: smtp.yourdomain.com
@@ -13,26 +18,36 @@ data:
   SMTP_PORT: "587"
   SMTP_USERNAME: yourusername
   SNOWFLAKE_DRIVER_PATH: /usr/lib/snowflake/odbc/lib/libSnowflake.so
+
+  # Temporal
+  TEMPORAL_VERSION: 1.22.4
+  TEMPORAL_UI_VERSION: 2.21.0
+
+  TEMPORAL_HOST: temporal
+  TEMPORAL_NAMESPACE: multiwoven-dev
+  TEMPORAL_PORT: "7233"
+  
+  TEMPORAL_CLIENT_CHAIN: /certs/temporal.chain.pem
+  TEMPORAL_CLIENT_KEY: /certs/temporal.key
+  TEMPORAL_ROOT_CERT: /certs/temporal.pem
+  
+  TEMPORAL_POSTGRES_DEFAULT_PORT: "5432"
+  TEMPORAL_POSTGRES_PASSWORD: password
+  TEMPORAL_POSTGRES_USER: multiwoven
+  TEMPORAL_POSTGRESQL_VERSION: "13"
+
+  TEMPORAL_TASK_QUEUE: sync-dev
+  
+
+  # Sync tuning
   SYNC_EXTRACTOR_BATCH_SIZE: "1000"
   SYNC_EXTRACTOR_THREAD_POOL_SIZE: "10"
   SYNC_LOADER_BATCH_SIZE: "1000"
   SYNC_LOADER_THREAD_POOL_SIZE: "10"
   TEMPORAL_ACTIVITY_THREAD_POOL_SIZE: "20"
-  TEMPORAL_CLIENT_CHAIN: /certs/temporal.chain.pem
-  TEMPORAL_CLIENT_KEY: /certs/temporal.key
-  TEMPORAL_HOST: temporal
-  TEMPORAL_NAMESPACE: multiwoven-dev
-  TEMPORAL_PORT: "7233"
-  TEMPORAL_POSTGRES_DEFAULT_PORT: "5432"
-  TEMPORAL_POSTGRES_PASSWORD: temporal
-  TEMPORAL_POSTGRES_USER: temporal
-  TEMPORAL_POSTGRESQL_VERSION: "13"
-  TEMPORAL_ROOT_CERT: /certs/temporal.pem
-  TEMPORAL_TASK_QUEUE: sync-dev
-  TEMPORAL_UI_VERSION: 2.21.0
-  TEMPORAL_VERSION: 1.22.4
   TEMPORAL_WORKFLOW_THREAD_POOL_SIZE: "10"
-  UI_HOST: localhost:8000
+ 
+  
 kind: ConfigMap
 metadata:
   labels:
