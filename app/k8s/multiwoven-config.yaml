@@ -35,5 +35,5 @@ data:
 kind: ConfigMap
 metadata:
   labels:
-    io.kompose.service: multiwoven-server-env
-  name: env
+    io.kompose.service: multiwoven-config
+  name: multiwoven-config

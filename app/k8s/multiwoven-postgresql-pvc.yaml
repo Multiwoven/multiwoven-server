@@ -2,8 +2,8 @@ apiVersion: v1
 kind: PersistentVolumeClaim
 metadata:
   labels:
-    io.kompose.service: postgresql-claim0
-  name: postgresql-claim0
+    io.kompose.service: multiwoven-postgresql-pvc
+  name: multiwoven-postgresql-pvc
 spec:
   accessModes:
     - ReadWriteOnce

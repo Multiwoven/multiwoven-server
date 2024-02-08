@@ -5,13 +5,13 @@ metadata:
     kompose.cmd: kompose convert
     kompose.version: 1.32.0 (HEAD)
   labels:
-    io.kompose.service: postgresql
-  name: postgresql
+    io.kompose.service: multiwoven-postgresql
+  name: multiwoven-postgresql
 spec:
   replicas: 1
   selector:
     matchLabels:
-      io.kompose.service: postgresql
+      io.kompose.service: multiwoven-postgresql
   strategy:
     type: Recreate
   template:
@@ -21,25 +21,31 @@ spec:
         kompose.version: 1.32.0 (HEAD)
       labels:
         io.kompose.network/multiwoven-server-default: "true"
-        io.kompose.service: postgresql
+        io.kompose.service: multiwoven-postgresql
     spec:
       containers:
         - env:
             - name: POSTGRES_PASSWORD
-              value: temporal
+              valueFrom:
+                configMapKeyRef:
+                  name: multiwoven-config
+                  key: DB_PASSWORD
             - name: POSTGRES_USER
-              value: temporal
+              valueFrom:
+                configMapKeyRef:
+                  name: multiwoven-config
+                  key: DB_USERNAME
           image: postgres:13
-          name: temporal-postgresql
+          name: multiwoven-postgresql
           ports:
             - containerPort: 5432
               hostPort: 5432
               protocol: TCP
           volumeMounts:
             - mountPath: /var/lib/postgresql/data
-              name: postgresql-claim0
+              name: multiwoven-postgresql-pvc
       restartPolicy: Always
       volumes:
-        - name: postgresql-claim0
+        - name: multiwoven-postgresql-pvc
           persistentVolumeClaim:
-            claimName: postgresql-claim0
+            claimName: multiwoven-postgresql-pvc

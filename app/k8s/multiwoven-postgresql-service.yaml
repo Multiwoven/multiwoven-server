@@ -5,12 +5,12 @@ metadata:
     kompose.cmd: kompose convert
     kompose.version: 1.32.0 (HEAD)
   labels:
-    io.kompose.service: postgresql
-  name: postgresql
+    io.kompose.service: multiwoven-postgresql
+  name: multiwoven-postgresql
 spec:
   ports:
     - name: "5432"
       port: 5432
       targetPort: 5432
   selector:
-    io.kompose.service: postgresql
+    io.kompose.service: multiwoven-postgresql
