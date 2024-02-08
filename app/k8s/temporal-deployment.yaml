@@ -1,13 +1,9 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  annotations:
-    kompose.cmd: kompose convert
-    kompose.version: 1.32.0 (HEAD)
-    kompose.volume.type: configMap
+  name: temporal
   labels:
     io.kompose.service: temporal
-  name: temporal
 spec:
   replicas: 1
   selector:
@@ -15,30 +11,43 @@ spec:
       io.kompose.service: temporal
   template:
     metadata:
-      annotations:
-        kompose.cmd: kompose convert
-        kompose.version: 1.32.0 (HEAD)
-        kompose.volume.type: configMap
       labels:
         io.kompose.network/multiwoven-server-default: "true"
         io.kompose.service: temporal
     spec:
       containers:
-        - env:
+        - name: temporal
+          image: temporalio/auto-setup:1.22.4
+          ports:
+            - containerPort: 7233
+          env:
             - name: DB
               value: postgresql
             - name: DB_PORT
-              value: "5432"
+              valueFrom:
+                configMapKeyRef:
+                  name: multiwoven-config
+                  key: DB_PORT
             - name: POSTGRES_PWD
-              value: temporal
+              valueFrom:
+                configMapKeyRef:
+                  name: multiwoven-config
+                  key: DB_PASSWORD
             - name: POSTGRES_SEEDS
-              value: postgresql
+              valueFrom:
+                configMapKeyRef:
+                  name: multiwoven-config
+                  key: DB_HOST
             - name: POSTGRES_USER
-              value: temporal
-          image: temporalio/auto-setup:1.22.4
-          name: temporal
-          ports:
-            - containerPort: 7233
-              hostPort: 7233
-              protocol: TCP
+              valueFrom:
+                configMapKeyRef:
+                  name: multiwoven-config
+                  key: DB_USERNAME
+          resources:
+            requests:
+              cpu: "500m"
+              memory: "1Gi"
+            limits:
+              cpu: "1"
+              memory: "2Gi"
       restartPolicy: Always

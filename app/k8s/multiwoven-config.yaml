@@ -1,9 +1,10 @@
 apiVersion: v1
 data:
   API_HOST: localhost:3000
-  DB_HOST: db
+  DB_HOST: multiwoven-postgresql
   DB_PASSWORD: password
   DB_USERNAME: multiwoven
+  DB_PORT: "5432"
   NEW_RELIC_KEY: yourkey
   RAILS_ENV: development
   SMTP_ADDRESS: smtp.yourdomain.com
