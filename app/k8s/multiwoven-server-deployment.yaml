@@ -193,11 +193,4 @@ spec:
               protocol: TCP
           stdin: true
           tty: true
-          volumeMounts:
-            - mountPath: /rails
-              name: multiwoven-server-claim0
       restartPolicy: Always
-      volumes:
-        - name: multiwoven-server-claim0
-          persistentVolumeClaim:
-            claimName: multiwoven-server-claim0

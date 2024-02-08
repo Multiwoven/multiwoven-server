@@ -191,11 +191,4 @@ spec:
                   name: env
           image:  multiwoven/multiwoven-server:latest
           name: multiwoven-worker
-          volumeMounts:
-            - mountPath: /rails
-              name: multiwoven-worker-claim0
       restartPolicy: Always
-      volumes:
-        - name: multiwoven-worker-claim0
-          persistentVolumeClaim:
-            claimName: multiwoven-worker-claim0
