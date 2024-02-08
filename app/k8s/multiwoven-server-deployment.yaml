@@ -1,196 +1,49 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  annotations:
-    kompose.cmd: kompose convert
-    kompose.version: 1.32.0 (HEAD)
-  labels:
-    io.kompose.service: multiwoven-server
   name: multiwoven-server
+  labels:
+    app: multiwoven-server
+    io.kompose.service: multiwoven-server
 spec:
   replicas: 1
   selector:
     matchLabels:
+      app: multiwoven-server
       io.kompose.service: multiwoven-server
   strategy:
     type: Recreate
   template:
     metadata:
-      annotations:
-        kompose.cmd: kompose convert
-        kompose.version: 1.32.0 (HEAD)
       labels:
-        io.kompose.network/multiwoven-server-default: "true"
+        app: multiwoven-server
         io.kompose.service: multiwoven-server
     spec:
       containers:
-        - env:
-            - name: API_HOST
-              valueFrom:
-                configMapKeyRef:
-                  key: API_HOST
-                  name: env
-            - name: DB_HOST
-              valueFrom:
-                configMapKeyRef:
-                  key: DB_HOST
-                  name: env
-            - name: DB_PASSWORD
-              valueFrom:
-                configMapKeyRef:
-                  key: DB_PASSWORD
-                  name: env
-            - name: DB_USERNAME
-              valueFrom:
-                configMapKeyRef:
-                  key: DB_USERNAME
-                  name: env
-            - name: NEW_RELIC_KEY
-              valueFrom:
-                configMapKeyRef:
-                  key: NEW_RELIC_KEY
-                  name: env
-            - name: RAILS_ENV
-              valueFrom:
-                configMapKeyRef:
-                  key: RAILS_ENV
-                  name: env
-            - name: SMTP_ADDRESS
-              valueFrom:
-                configMapKeyRef:
-                  key: SMTP_ADDRESS
-                  name: env
-            - name: SMTP_HOST
-              valueFrom:
-                configMapKeyRef:
-                  key: SMTP_HOST
-                  name: env
-            - name: SMTP_PASSWORD
-              valueFrom:
-                configMapKeyRef:
-                  key: SMTP_PASSWORD
-                  name: env
-            - name: SMTP_PORT
-              valueFrom:
-                configMapKeyRef:
-                  key: SMTP_PORT
-                  name: env
-            - name: SMTP_USERNAME
-              valueFrom:
-                configMapKeyRef:
-                  key: SMTP_USERNAME
-                  name: env
-            - name: SNOWFLAKE_DRIVER_PATH
-              valueFrom:
-                configMapKeyRef:
-                  key: SNOWFLAKE_DRIVER_PATH
-                  name: env
-            - name: SYNC_EXTRACTOR_BATCH_SIZE
-              valueFrom:
-                configMapKeyRef:
-                  key: SYNC_EXTRACTOR_BATCH_SIZE
-                  name: env
-            - name: SYNC_EXTRACTOR_THREAD_POOL_SIZE
-              valueFrom:
-                configMapKeyRef:
-                  key: SYNC_EXTRACTOR_THREAD_POOL_SIZE
-                  name: env
-            - name: SYNC_LOADER_BATCH_SIZE
-              valueFrom:
-                configMapKeyRef:
-                  key: SYNC_LOADER_BATCH_SIZE
-                  name: env
-            - name: SYNC_LOADER_THREAD_POOL_SIZE
-              valueFrom:
-                configMapKeyRef:
-                  key: SYNC_LOADER_THREAD_POOL_SIZE
-                  name: env
-            - name: TEMPORAL_ACTIVITY_THREAD_POOL_SIZE
-              valueFrom:
-                configMapKeyRef:
-                  key: TEMPORAL_ACTIVITY_THREAD_POOL_SIZE
-                  name: env
-            - name: TEMPORAL_CLIENT_CHAIN
-              valueFrom:
-                configMapKeyRef:
-                  key: TEMPORAL_CLIENT_CHAIN
-                  name: env
-            - name: TEMPORAL_CLIENT_KEY
-              valueFrom:
-                configMapKeyRef:
-                  key: TEMPORAL_CLIENT_KEY
-                  name: env
-            - name: TEMPORAL_HOST
-              valueFrom:
-                configMapKeyRef:
-                  key: TEMPORAL_HOST
-                  name: env
-            - name: TEMPORAL_NAMESPACE
-              valueFrom:
-                configMapKeyRef:
-                  key: TEMPORAL_NAMESPACE
-                  name: env
-            - name: TEMPORAL_PORT
-              valueFrom:
-                configMapKeyRef:
-                  key: TEMPORAL_PORT
-                  name: env
-            - name: TEMPORAL_POSTGRESQL_VERSION
-              valueFrom:
-                configMapKeyRef:
-                  key: TEMPORAL_POSTGRESQL_VERSION
-                  name: env
-            - name: TEMPORAL_POSTGRES_DEFAULT_PORT
-              valueFrom:
-                configMapKeyRef:
-                  key: TEMPORAL_POSTGRES_DEFAULT_PORT
-                  name: env
-            - name: TEMPORAL_POSTGRES_PASSWORD
-              valueFrom:
-                configMapKeyRef:
-                  key: TEMPORAL_POSTGRES_PASSWORD
-                  name: env
-            - name: TEMPORAL_POSTGRES_USER
-              valueFrom:
-                configMapKeyRef:
-                  key: TEMPORAL_POSTGRES_USER
-                  name: env
-            - name: TEMPORAL_ROOT_CERT
-              valueFrom:
-                configMapKeyRef:
-                  key: TEMPORAL_ROOT_CERT
-                  name: env
-            - name: TEMPORAL_TASK_QUEUE
-              valueFrom:
-                configMapKeyRef:
-                  key: TEMPORAL_TASK_QUEUE
-                  name: env
-            - name: TEMPORAL_UI_VERSION
-              valueFrom:
-                configMapKeyRef:
-                  key: TEMPORAL_UI_VERSION
-                  name: env
-            - name: TEMPORAL_VERSION
-              valueFrom:
-                configMapKeyRef:
-                  key: TEMPORAL_VERSION
-                  name: env
-            - name: TEMPORAL_WORKFLOW_THREAD_POOL_SIZE
-              valueFrom:
-                configMapKeyRef:
-                  key: TEMPORAL_WORKFLOW_THREAD_POOL_SIZE
-                  name: env
-            - name: UI_HOST
-              valueFrom:
-                configMapKeyRef:
-                  key: UI_HOST
-                  name: env
+        - name: multiwoven-server
           image: multiwoven/multiwoven-server:latest
-          name: multiwoven-server
           ports:
             - containerPort: 3000
-              hostPort: 3000
-              protocol: TCP
-          stdin: true
-          tty: true
+          envFrom:
+            - configMapRef:
+                name: multiwoven-config
+          resources:
+            requests:
+              cpu: "1"
+              memory: "1Gi"
+            limits:
+              cpu: "2"
+              memory: "2Gi"
+          livenessProbe:
+            httpGet:
+              path: /
+              port: 3000
+            initialDelaySeconds: 15
+            periodSeconds: 10
+          readinessProbe:
+            httpGet:
+              path: /
+              port: 3000
+            initialDelaySeconds: 5
+            periodSeconds: 10
       restartPolicy: Always
