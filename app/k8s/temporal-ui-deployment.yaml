@@ -1,0 +1,36 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  annotations:
+    kompose.cmd: kompose convert
+    kompose.version: 1.32.0 (HEAD)
+  labels:
+    io.kompose.service: temporal-ui
+  name: temporal-ui
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      io.kompose.service: temporal-ui
+  template:
+    metadata:
+      annotations:
+        kompose.cmd: kompose convert
+        kompose.version: 1.32.0 (HEAD)
+      labels:
+        io.kompose.network/multiwoven-server-default: "true"
+        io.kompose.service: temporal-ui
+    spec:
+      containers:
+        - env:
+            - name: TEMPORAL_ADDRESS
+              value: temporal:7233
+            - name: TEMPORAL_CORS_ORIGINS
+              value: http://localhost:3000
+          image: temporalio/ui:2.21.0
+          name: temporal-ui
+          ports:
+            - containerPort: 8080
+              hostPort: 8080
+              protocol: TCP
+      restartPolicy: Always

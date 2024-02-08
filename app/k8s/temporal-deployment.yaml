@@ -1,0 +1,44 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  annotations:
+    kompose.cmd: kompose convert
+    kompose.version: 1.32.0 (HEAD)
+    kompose.volume.type: configMap
+  labels:
+    io.kompose.service: temporal
+  name: temporal
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      io.kompose.service: temporal
+  template:
+    metadata:
+      annotations:
+        kompose.cmd: kompose convert
+        kompose.version: 1.32.0 (HEAD)
+        kompose.volume.type: configMap
+      labels:
+        io.kompose.network/multiwoven-server-default: "true"
+        io.kompose.service: temporal
+    spec:
+      containers:
+        - env:
+            - name: DB
+              value: postgresql
+            - name: DB_PORT
+              value: "5432"
+            - name: POSTGRES_PWD
+              value: temporal
+            - name: POSTGRES_SEEDS
+              value: postgresql
+            - name: POSTGRES_USER
+              value: temporal
+          image: temporalio/auto-setup:1.22.4
+          name: temporal
+          ports:
+            - containerPort: 7233
+              hostPort: 7233
+              protocol: TCP
+      restartPolicy: Always
