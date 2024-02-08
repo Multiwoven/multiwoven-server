@@ -7,7 +7,7 @@ data:
   DB_HOST: multiwoven-postgresql
   DB_PASSWORD: password
   DB_USERNAME: multiwoven
-  DB_PORT: 5432
+  DB_PORT: "5432"
 
   # App
   NEW_RELIC_KEY: yourkey
