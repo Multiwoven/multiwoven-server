@@ -26,8 +26,10 @@ spec:
             - name: TEMPORAL_ADDRESS
               value: temporal:7233
             - name: TEMPORAL_CORS_ORIGINS
-              value: http://localhost:3000
-          image: temporalio/web:2.23.2
+              value: http://localhost:3000  
+            - name: TEMPORAL_UI_PORT
+              value: "8080"
+          image:  temporalio/ui:2.22.3
           name: temporal-ui
           ports:
             - containerPort: 8080
