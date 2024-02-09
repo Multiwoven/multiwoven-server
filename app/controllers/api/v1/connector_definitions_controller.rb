@@ -12,13 +12,13 @@ module Api
 
       def show
         @connector = @connectors.find do |hash|
-          hash[:name].downcase == params[:id].downcase
+          hash[:name].downcase == connector_definitions_params[:id].downcase
         end
         render json: @connector || []
       end
 
       def check_connection
-        connection_spec = params[:connection_spec]
+        connection_spec = connector_definitions_params[:connection_spec]
         connection_spec = connection_spec.to_unsafe_h if connection_spec.respond_to?(:to_unsafe_h)
         connection_status = @connector_client
                             .check_connection(
@@ -34,15 +34,22 @@ module Api
         @connectors = Multiwoven::Integrations::Service
                       .connectors
                       .with_indifferent_access
-        @connectors = @connectors[params[:type]] if params[:type]
+        @connectors = @connectors[connector_definitions_params[:type]] if connector_definitions_params[:type]
       end
 
       def set_connector_client
         @connector_client = Multiwoven::Integrations::Service
                             .connector_class(
-                              params[:type].camelize,
-                              params[:name].camelize
+                              connector_definitions_params[:type].camelize,
+                              connector_definitions_params[:connector_name].camelize
                             ).new
+      end
+
+      def connector_definitions_params
+				params.permit(:type,
+											:connector_name,
+											:id,
+											connection_spec: {})
       end
     end
   end

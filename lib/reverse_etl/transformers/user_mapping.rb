@@ -3,6 +3,7 @@
 module ReverseEtl
   module Transformers
     class UserMapping < Base
+      # Returns the destination json payload 
       def transform(sync, sync_record)
         mapping = sync.configuration
         record = sync_record.record

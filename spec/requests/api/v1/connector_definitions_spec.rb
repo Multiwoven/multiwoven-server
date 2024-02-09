@@ -64,13 +64,14 @@ RSpec.describe "Api::V1::ConnectorDefinitions", type: :request do
         .and_return(connection_status.new(status: "succeeded").to_multiwoven_message)
 
       post check_connection_api_v1_connector_definitions_path,
-           params: { type: "source", name: "snowflake", connection_spec: {} },
+           params: { type: "source", connector_name: "snowflake", connection_spec: {} },
            headers: auth_headers(user)
 
       expect(response).to have_http_status(:ok)
 
       response_hash = JSON.parse(response.body).with_indifferent_access
       expect(response_hash[:connection_status][:status]).to eql("succeeded")
+      byebug
     end
 
     it "returns failure status for a valid connection" do
@@ -78,7 +79,7 @@ RSpec.describe "Api::V1::ConnectorDefinitions", type: :request do
         .and_return(connection_status.new(status: "failed").to_multiwoven_message)
 
       post check_connection_api_v1_connector_definitions_path,
-           params: { type: "source", name: "snowflake", connection_spec: {} },
+           params: { type: "source", connector_name: "snowflake", connection_spec: {} },
            headers: auth_headers(user)
 
       expect(response).to have_http_status(:ok)
