@@ -25,7 +25,7 @@ data:
 
   TEMPORAL_HOST: temporal
   TEMPORAL_NAMESPACE: multiwoven-dev
-  TEMPORAL_PORT: "7233"
+  TEMPORAL_PORT: 7233
   
   TEMPORAL_CLIENT_CHAIN: /certs/temporal.chain.pem
   TEMPORAL_CLIENT_KEY: /certs/temporal.key
