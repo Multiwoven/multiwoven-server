@@ -4,8 +4,8 @@ module ReverseEtl
   module Extractors
     class Base
       DEFAULT_OFFSET = 0
-      DEFAULT_BATCH_SIZE = 1000
-      DEFAULT_LIMT = 1000
+      DEFAULT_BATCH_SIZE = 10_000
+      DEFAULT_LIMT = 10_000
 
       def read(_sync_run_id)
         raise "Not implemented"
