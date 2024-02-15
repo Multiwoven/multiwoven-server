@@ -3,7 +3,7 @@
 module ReverseEtl
   module Loaders
     class Standard < Base
-      THREAD_COUNT = 10
+      THREAD_COUNT = (ENV["SYNC_LOADER_THREAD_POOL_SIZE"] || "5").to_i
       def write(sync_run_id)
         sync_run = SyncRun.find(sync_run_id)
         sync = sync_run.sync

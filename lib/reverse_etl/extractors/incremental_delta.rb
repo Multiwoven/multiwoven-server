@@ -3,8 +3,7 @@
 module ReverseEtl
   module Extractors
     class IncrementalDelta < Base
-      # TODO: Take this from ENV
-      THREAD_COUNT = 10
+      THREAD_COUNT = (ENV["SYNC_EXTRACTOR_THREAD_POOL_SIZE"] || "5").to_i
 
       # TODO: Make it as class method
       def read(sync_run_id)
