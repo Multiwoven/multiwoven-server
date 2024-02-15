@@ -30,12 +30,17 @@ RSpec.describe ReverseEtl::Loaders::Standard do
         success: 2,
         failed: 0
       )
-      multiwoven_message = tracker.to_multiwoven_message
+      let(:transformer) { ReverseEtl::Transformers::UserMapping.new }
+      let(:transform) do
+        [transformer.transform(sync_batch, sync_record_batch1), transformer.transform(sync_batch, sync_record_batch2)]
+      end
+      let(:multiwoven_message) { tracker.to_multiwoven_message }
       let(:client) { instance_double(sync_batch.destination.connector_client) }
       it "calls process_batch_records method" do
         allow(sync_batch.destination.connector_client).to receive(:new).and_return(client)
-        allow(client).to receive(:write).and_return(multiwoven_message)
+        allow(client).to receive(:write).with(sync_batch.to_protocol, transform).and_return(multiwoven_message)
         subject.write(sync_run_batch.id)
+        expect(sync_run_batch.sync_records.count).to eq(2)
         sync_run_batch.sync_records.reload.each do |sync_record|
           expect(sync_record.status).to eq("success")
         end
@@ -47,12 +52,18 @@ RSpec.describe ReverseEtl::Loaders::Standard do
         success: 0,
         failed: 2
       )
-      multiwoven_message = tracker.to_multiwoven_message
+
+      let(:transformer) { ReverseEtl::Transformers::UserMapping.new }
+      let(:transform) do
+        [transformer.transform(sync_batch, sync_record_batch1), transformer.transform(sync_batch, sync_record_batch2)]
+      end
+      let(:multiwoven_message) { tracker.to_multiwoven_message }
       let(:client) { instance_double(sync_batch.destination.connector_client) }
       it "calls process_batch_records method" do
         allow(sync_batch.destination.connector_client).to receive(:new).and_return(client)
-        allow(client).to receive(:write).and_return(multiwoven_message)
+        allow(client).to receive(:write).with(sync_batch.to_protocol, transform).and_return(multiwoven_message)
         subject.write(sync_run_batch.id)
+        expect(sync_run_batch.sync_records.count).to eq(2)
         sync_run_batch.sync_records.reload.each do |sync_record|
           expect(sync_record.status).to eq("failed")
         end
@@ -64,12 +75,15 @@ RSpec.describe ReverseEtl::Loaders::Standard do
         success: 1,
         failed: 0
       )
-      multiwoven_message = tracker.to_multiwoven_message
-      let(:client) { instance_double(sync_batch.destination.connector_client) }
+      let(:transformer) { ReverseEtl::Transformers::UserMapping.new }
+      let(:transform) { transformer.transform(sync_individual, sync_record_individual) }
+      let(:multiwoven_message) { tracker.to_multiwoven_message }
+      let(:client) { instance_double(sync_individual.destination.connector_client) }
       it "calls process_individual_records method" do
-        allow(sync_batch.destination.connector_client).to receive(:new).and_return(client)
-        allow(client).to receive(:write).and_return(multiwoven_message)
+        allow(sync_individual.destination.connector_client).to receive(:new).and_return(client)
+        allow(client).to receive(:write).with(sync_individual.to_protocol, [transform]).and_return(multiwoven_message)
         subject.write(sync_run_individual.id)
+        expect(sync_run_individual.sync_records.count).to eq(1)
         sync_run_individual.sync_records.reload.each do |sync_record|
           expect(sync_record.status).to eq("success")
         end
@@ -80,12 +94,16 @@ RSpec.describe ReverseEtl::Loaders::Standard do
         success: 0,
         failed: 1
       )
-      multiwoven_message = tracker.to_multiwoven_message
-      let(:client) { instance_double(sync_batch.destination.connector_client) }
+      let(:transformer) { ReverseEtl::Transformers::UserMapping.new }
+      let(:transform) { transformer.transform(sync_individual, sync_record_individual) }
+      let(:multiwoven_message) { tracker.to_multiwoven_message }
+      let(:client) { instance_double(sync_individual.destination.connector_client) }
+
       it "calls process_individual_records method" do
-        allow(sync_batch.destination.connector_client).to receive(:new).and_return(client)
-        allow(client).to receive(:write).and_return(multiwoven_message)
+        allow(sync_individual.destination.connector_client).to receive(:new).and_return(client)
+        allow(client).to receive(:write).with(sync_individual.to_protocol, [transform]).and_return(multiwoven_message)
         subject.write(sync_run_individual.id)
+        expect(sync_run_individual.sync_records.count).to eq(1)
         sync_run_individual.sync_records.reload.each do |sync_record|
           expect(sync_record.status).to eq("failed")
         end
