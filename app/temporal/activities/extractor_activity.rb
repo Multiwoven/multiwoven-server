@@ -3,7 +3,7 @@
 module Activities
   class ExtractorActivity < Temporal::Activity
     timeouts(
-      start_to_close: 9000
+      start_to_close: (ENV["TEMPORAL_ACTIVITY_START_TO_CLOSE"] || "3600").to_i
     )
     def execute(sync_run_id)
       sync_run = SyncRun.find(sync_run_id)
