@@ -2,6 +2,9 @@
 
 module ModelContracts
   class Index < Dry::Validation::Contract
+    params do
+      optional(:page).filled(:integer)
+    end
   end
 
   class Show < Dry::Validation::Contract
