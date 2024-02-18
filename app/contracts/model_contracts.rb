@@ -5,6 +5,7 @@ module ModelContracts
   end
 
   class Show < Dry::Validation::Contract
+    params do
       required(:id).filled(:integer)
     end
   end
