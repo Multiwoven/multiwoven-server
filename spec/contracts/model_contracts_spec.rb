@@ -76,8 +76,12 @@ RSpec.describe "ModelContracts" do
       end
 
       it "fails validation due to invalid SQL syntax" do
-        allow(PgQuery).to receive(:parse).with("SELECT FROM table;").and_raise(PgQuery::ParseError.new("invalid syntax",
-                                                                                                       __FILE__, __LINE__, -1))
+        allow(PgQuery).to receive(:parse).with("SELECT FROM table;").and_raise(
+          PgQuery::ParseError.new(
+            "invalid syntax",
+            __FILE__, __LINE__, -1
+          )
+        )
         result = contract.call(invalid_inputs)
         expect(result.errors[:model][:query]).to include("contains invalid SQL syntax")
       end
