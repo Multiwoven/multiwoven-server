@@ -24,6 +24,10 @@ module AuthContracts
     rule(:email) do
       key.failure("has invalid email format") unless /\A[\w+\-.]+@[a-z\d-]+(\.[a-z\d-]+)*\.[a-z]+\z/i.match?(value)
     end
+
+    rule(:password, :password_confirmation) do
+      key.failure("password doesn't match") if values[:password] != values[:password_confirmation]
+    end
   end
 
   class Logout < Dry::Validation::Contract
@@ -47,6 +51,10 @@ module AuthContracts
       required(:password).filled(:string)
       required(:password_confirmation).filled(:string)
       required(:reset_password_token).filled(:string)
+    end
+
+    rule(:password, :password_confirmation) do
+      key.failure("password doesn't match") if values[:password] != values[:password_confirmation]
     end
   end
 
