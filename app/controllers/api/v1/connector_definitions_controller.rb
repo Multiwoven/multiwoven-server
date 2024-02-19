@@ -3,7 +3,6 @@
 module Api
   module V1
     class ConnectorDefinitionsController < ApplicationController
-      before_action :validate_contract
       before_action :set_connectors, only: %i[show index]
       before_action :set_connector_client, only: %i[check_connection]
 

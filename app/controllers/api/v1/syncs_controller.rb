@@ -4,7 +4,6 @@ module Api
   module V1
     class SyncsController < ApplicationController
       include Syncs
-      before_action :validate_contract
       before_action :set_sync, only: %i[show update destroy]
       after_action :event_logger
 

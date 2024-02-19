@@ -4,7 +4,6 @@ module Api
   module V1
     class AuthController < ApplicationController
       include Authentication
-      before_action :validate_contract
       before_action :authenticate_user!, only: [:logout]
 
       def login

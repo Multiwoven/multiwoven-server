@@ -6,7 +6,6 @@ module Api
       include Models
       attr_reader :connector, :model
 
-      before_action :validate_contract
       before_action :set_connector, only: %i[create]
       before_action :set_model, only: %i[show update destroy]
       after_action :event_logger
