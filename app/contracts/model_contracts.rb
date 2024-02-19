@@ -26,8 +26,8 @@ module ModelContracts
 
     rule(model: :query) do
       PgQuery.parse(value)
-    rescue PgQuery::ParseError => e
-      key.failure("contains invalid SQL syntax: #{e.message}")
+    rescue PgQuery::ParseError
+      key.failure("contains invalid SQL syntax")
     end
 
     rule(model: :query_type) do
