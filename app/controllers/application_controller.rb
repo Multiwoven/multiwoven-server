@@ -32,7 +32,7 @@ class ApplicationController < ActionController::API
     result = contract.new.call(params.to_unsafe_h)
     return unless result.errors.any?
 
-    render json: { errors: result.errors.to_h }, status: :unprocessable_entity
+    render json: { errors: result.errors.to_h }, status: :bad_request
   end
 
   def format_errors(model)
