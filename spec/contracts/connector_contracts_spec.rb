@@ -160,7 +160,6 @@ describe ConnectorContracts::Update do
       result = contract.call(invalid_inputs)
       expect(result).to_not be_success
       expect(result.errors[:connector][:name]).to include("must be filled")
-      expect(result.errors[:connector][:connector_name]).to include("invalid connector source name")
       expect(result.errors[:connector][:connector_type]).to include("invalid connector type")
     end
   end
@@ -188,7 +187,7 @@ describe ConnectorContracts::Update do
     it "fails validation due to invalid connector source name" do
       result = contract.call(inputs_with_invalid_name_for_type)
       expect(result).to_not be_success
-      expect(result.errors[:connector][:connector_name]).to include("invalid connector source name")
+      expect(result.errors[:connector][%i[connector_type connector_name]]).to include("invalid connector source name")
     end
   end
 end
