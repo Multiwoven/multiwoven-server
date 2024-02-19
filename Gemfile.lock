@@ -1888,6 +1888,8 @@ GEM
       ast (~> 2.4.1)
       racc
     pg (1.5.4)
+    pg_query (5.0.0)
+      google-protobuf (>= 3.22.3)
     protocol-hpack (1.4.2)
     protocol-http (0.26.1)
     protocol-http1 (0.18.0)
@@ -2090,6 +2092,7 @@ DEPENDENCIES
   newrelic_rpm
   parallel
   pg (~> 1.1)
+  pg_query
   puma (>= 5.0)
   rack-cors
   rails (~> 7.1.1)
