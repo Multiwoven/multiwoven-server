@@ -45,6 +45,7 @@ RSpec.describe ReverseEtl::Extractors::IncrementalDelta do
   describe "#read" do
     context "when there is a new record" do
       it "creates a new sync record" do
+        expect(subject).to receive(:heartbeat).once.with(activity)
         expect { subject.read(sync_run1.id, activity) }.to change(sync_run1.sync_records, :count).by(2)
       end
     end
@@ -53,6 +54,7 @@ RSpec.describe ReverseEtl::Extractors::IncrementalDelta do
   context "when an existing record is updated" do
     it "updates the existing sync record with fingerprint change" do
       # First sync run
+      expect(subject).to receive(:heartbeat).once.with(activity)
       subject.read(sync_run1.id, activity)
       expect(sync_run1.sync_records.count).to eq(2)
 
@@ -72,6 +74,7 @@ RSpec.describe ReverseEtl::Extractors::IncrementalDelta do
       allow(ReverseEtl::Utils::BatchQuery).to receive(:execute_in_batches).and_yield([modified_record1, record2], 1)
 
       # Second sync run
+      expect(subject).to receive(:heartbeat).once.with(activity)
       subject.read(sync_run2.id, activity)
 
       updated_sync_record = sync_run2.sync_records.find_by(primary_key: record1.record.data["id"])
@@ -83,6 +86,7 @@ RSpec.describe ReverseEtl::Extractors::IncrementalDelta do
       allow(ReverseEtl::Utils::BatchQuery).to receive(:execute_in_batches).and_yield([record2, record3], 1)
 
       # Third sync run with same record
+      expect(subject).to receive(:heartbeat).once.with(activity)
       subject.read(sync_run3.id, activity)
       expect(sync_run3.sync_records.count).to eq(0)
     end
