@@ -12,6 +12,7 @@ RSpec.describe ReverseEtl::Extractors::IncrementalDelta do
   let(:sync_run1) { create(:sync_run, sync:) }
   let(:sync_run2) { create(:sync_run, sync:) }
   let(:sync_run3) { create(:sync_run, sync:) }
+  let(:activity) { instance_double("ExtractorActivity") }
 
   let(:client) { Multiwoven::Integrations::Source::Snowflake::Client.new }
   let(:record1) do
@@ -37,12 +38,14 @@ RSpec.describe ReverseEtl::Extractors::IncrementalDelta do
     allow(client).to receive(:read).and_return(records)
     allow(ReverseEtl::Utils::BatchQuery).to receive(:execute_in_batches).and_yield(records, 1)
     allow(sync_run1.sync.source).to receive_message_chain(:connector_client, :new).and_return(client)
+    allow(activity).to receive(:heartbeat)
+    allow(activity).to receive(:cancel_requested).and_return(false)
   end
 
   describe "#read" do
     context "when there is a new record" do
       it "creates a new sync record" do
-        expect { subject.read(sync_run1.id) }.to change(sync_run1.sync_records, :count).by(2)
+        expect { subject.read(sync_run1.id, activity) }.to change(sync_run1.sync_records, :count).by(2)
       end
     end
   end
@@ -50,7 +53,7 @@ RSpec.describe ReverseEtl::Extractors::IncrementalDelta do
   context "when an existing record is updated" do
     it "updates the existing sync record with fingerprint change" do
       # First sync run
-      subject.read(sync_run1.id)
+      subject.read(sync_run1.id, activity)
       expect(sync_run1.sync_records.count).to eq(2)
 
       initial_sync_record = sync_run1.sync_records.find_by(primary_key: record1.record.data["id"])
@@ -69,7 +72,7 @@ RSpec.describe ReverseEtl::Extractors::IncrementalDelta do
       allow(ReverseEtl::Utils::BatchQuery).to receive(:execute_in_batches).and_yield([modified_record1, record2], 1)
 
       # Second sync run
-      subject.read(sync_run2.id)
+      subject.read(sync_run2.id, activity)
 
       updated_sync_record = sync_run2.sync_records.find_by(primary_key: record1.record.data["id"])
       expect(sync_run2.sync_records.count).to eq(1)
@@ -80,7 +83,7 @@ RSpec.describe ReverseEtl::Extractors::IncrementalDelta do
       allow(ReverseEtl::Utils::BatchQuery).to receive(:execute_in_batches).and_yield([record2, record3], 1)
 
       # Third sync run with same record
-      subject.read(sync_run3.id)
+      subject.read(sync_run3.id, activity)
       expect(sync_run3.sync_records.count).to eq(0)
     end
   end
