@@ -63,6 +63,20 @@ module Api
       # TODO: Sync trigger API
       # def trigger; end
 
+      def configurations
+        result = SyncConfigurations.call
+
+        if result.success?
+          render json: result.configurations, status: :ok
+        elsif result.failure?
+          render_error(
+            message: "Unable to fetch sync configurations",
+            status: :unprocessable_entity,
+            details: format_errors(result.error)
+          )
+        end
+      end
+
       private
 
       def set_sync

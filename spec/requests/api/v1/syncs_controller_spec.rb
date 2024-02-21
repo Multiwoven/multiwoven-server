@@ -209,4 +209,13 @@ RSpec.describe "Api::V1::SyncsController", type: :request do
       end
     end
   end
+
+  describe "#configurations" do
+    it "returns the configurations" do
+      get "/api/v1/syncs/configurations", headers: auth_headers(user)
+
+      result = JSON.parse(response.body).with_indifferent_access
+      expect(result[:data].keys.last).to eq("configurations")
+    end
+  end
 end
