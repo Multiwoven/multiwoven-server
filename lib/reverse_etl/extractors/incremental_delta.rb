@@ -3,11 +3,10 @@
 module ReverseEtl
   module Extractors
     class IncrementalDelta < Base
-      # TODO: Take this from ENV
-      THREAD_COUNT = 3
+      THREAD_COUNT = (ENV["SYNC_EXTRACTOR_THREAD_POOL_SIZE"] || "5").to_i
 
       # TODO: Make it as class method
-      def read(sync_run_id)
+      def read(sync_run_id, activity)
         sync_run = setup_sync_run(sync_run_id)
         source_client = setup_source_client(sync_run.sync)
 
@@ -16,11 +15,17 @@ module ReverseEtl
 
         ReverseEtl::Utils::BatchQuery.execute_in_batches(batch_query_params) do |records, current_offset|
           process_records(records, sync_run, model)
+          heartbeat(activity)
           sync_run.update(current_offset:)
         end
       end
 
       private
+
+      def heartbeat(activity)
+        activity.heartbeat
+        raise StandardError, "Cancel activity request received" if activity.cancel_requested
+      end
 
       def setup_sync_run(sync_run_id)
         SyncRun.find(sync_run_id).tap do |sync_run|
@@ -34,8 +39,7 @@ module ReverseEtl
 
       def process_records(records, sync_run, model)
         # TODO: parellelize this
-        # Parallel.each(records, in_threads: THREAD_COUNT) do |message|
-        records.each do |message|
+        Parallel.each(records, in_threads: THREAD_COUNT) do |message|
           process_record(message, sync_run, model)
         end
       end

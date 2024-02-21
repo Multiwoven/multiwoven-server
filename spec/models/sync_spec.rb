@@ -43,8 +43,8 @@ RSpec.describe Sync, type: :model do
   describe "#to_protocol" do
     let(:streams) do
       [
-        { "name" => "profile", "json_schema" => {} },
-        { "name" => "customer", "json_schema" => {} }
+        { "name" => "profile", "batch_support" => false, "batch_size" => 1, "json_schema" => {} },
+        { "name" => "customer", "batch_support" => false, "batch_size" => 1, "json_schema" => {} }
       ]
     end
 
@@ -128,6 +128,30 @@ RSpec.describe Sync, type: :model do
         sync.primary_key = "primary_key"
         sync.save
         expect(Temporal).not_to have_received(:start_workflow)
+      end
+    end
+  end
+
+  describe "#default_scope" do
+    let(:source) do
+      create(:connector, connector_type: "source", connector_name: "Snowflake")
+    end
+    let(:destination) { create(:connector, connector_type: "destination") }
+    let!(:catalog) { create(:catalog, connector: destination) }
+    let(:sync) { create_list(:sync, 4, sync_interval: 3, sync_interval_unit: "hours", source:, destination:) }
+
+    context "when a multiple syncs are created" do
+      it "returns the syncs in descending order of updated_at" do
+        expect(Sync.all).to eq(sync.sort_by(&:updated_at).reverse)
+      end
+    end
+
+    context "when a sync is updated" do
+      it "returns the syncs in descending order of updated_at" do
+        sync.first.update(updated_at: DateTime.current + 1.week)
+        sync.last.update(updated_at: DateTime.current - 1.week)
+
+        expect(Sync.all).to eq(sync.sort_by(&:updated_at).reverse)
       end
     end
   end
