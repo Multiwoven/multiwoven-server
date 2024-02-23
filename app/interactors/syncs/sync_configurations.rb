@@ -56,7 +56,7 @@ module Syncs
         current_timestamp: {
           type: "datetime",
           description: "The current timestamp as an ISO 8601 string YYYY-MM-DDTHH:mm:ss.sssZ.",
-          value: "{{ 'current_timestamp' }}"
+          value: "{{ 'now' | date: '%Y-%m-%dT%H:%M:%S.%L%z' }}"
         }
       }
     end
