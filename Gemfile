@@ -26,6 +26,7 @@ gem "dry-validation"
 gem "jbuilder"
 gem "jwt"
 gem "kaminari"
+gem "liquid"
 gem "rack-cors"
 
 # AuthN & AuthZ
