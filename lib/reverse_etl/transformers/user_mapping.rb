@@ -63,6 +63,7 @@ module ReverseEtl
       def template_mapping(mapping)
         dest_keys = mapping[:to].split(".")
         template = mapping[:template]
+        Liquid::Template.register_filter(Liquid::CustomFilters)
         liquid_template = Liquid::Template.parse(template)
         rendered_text = liquid_template.render(record)
         extract_destination_mapping(dest_keys, rendered_text)
