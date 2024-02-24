@@ -81,4 +81,8 @@ module SyncContracts
       required(:id).filled(:integer)
     end
   end
+
+  class Configurations < Dry::Validation::Contract
+    params {}
+  end
 end

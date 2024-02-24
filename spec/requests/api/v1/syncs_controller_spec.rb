@@ -11,6 +11,12 @@ RSpec.describe "Api::V1::SyncsController", type: :request do
       create(:connector, workspace:, connector_type: "source", name: "redshift", connector_name: "Redshift")
     ]
   end
+
+  before do
+    create(:catalog, connector: connectors.find { |connector| connector.name == "klavio1" }, workspace:)
+    create(:catalog, connector: connectors.find { |connector| connector.name == "redshift" }, workspace:)
+  end
+
   let(:model) do
     create(:model, connector: connectors.second, workspace:, name: "model1", query: "SELECT * FROM locations")
   end
