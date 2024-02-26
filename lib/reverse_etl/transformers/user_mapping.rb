@@ -56,13 +56,13 @@ module ReverseEtl
 
       def static_mapping(mapping)
         dest_keys = mapping[:to].split(".")
-        static_value = mapping[:value]
+        static_value = mapping[:from]
         extract_destination_mapping(dest_keys, static_value)
       end
 
       def template_mapping(mapping)
         dest_keys = mapping[:to].split(".")
-        template = mapping[:template]
+        template = mapping[:from]
         Liquid::Template.register_filter(Liquid::CustomFilters)
         liquid_template = Liquid::Template.parse(template)
         rendered_text = liquid_template.render(record)

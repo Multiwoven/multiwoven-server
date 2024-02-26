@@ -57,9 +57,9 @@ RSpec.describe ReverseEtl::Transformers::UserMapping do
       let(:mapping) do
         [
           { mapping_type: "standard", from: "cr_item_sk", to: "id" },
-          { mapping_type: "static", to: "attributes.properties.static_field", value: "static_value" },
+          { mapping_type: "static", to: "attributes.properties.static_field", from: "static_value" },
           { mapping_type: "template", to: "attributes.properties.template_field",
-            template: "Transformed {{cr_reason_sk}}" }
+            from: "Transformed {{cr_reason_sk}}" }
         ]
       end
 
@@ -84,7 +84,7 @@ RSpec.describe ReverseEtl::Transformers::UserMapping do
         instance_double("Sync", configuration: [
                           { mapping_type: "template",
                             to: "current_time",
-                            template: "{{ 'now' | date: '%Y-%m-%dT%H:%M:%S.%L%z' }}" }
+                            from: "{{ 'now' | date: '%Y-%m-%dT%H:%M:%S.%L%z' }}" }
                         ])
       end
       let(:sync_record) { instance_double("SyncRecord", record: {}) }
@@ -107,9 +107,9 @@ RSpec.describe ReverseEtl::Transformers::UserMapping do
       let(:mapping) do
         [
           { mapping_type: "template", to: "attributes.properties.cast_filter",
-            template: "Transformed {{cr_reason_sk  | cast: 'number' }}" },
+            from: "Transformed {{cr_reason_sk  | cast: 'number' }}" },
           { mapping_type: "template", to: "attributes.properties.regex_replace_field",
-            template: "Transformed {{cr_reason_sk | regex_replace: '[0-9]+', 'Numbers'}}" }
+            from: "Transformed {{cr_reason_sk | regex_replace: '[0-9]+', 'Numbers'}}" }
         ]
       end
 
