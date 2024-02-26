@@ -101,7 +101,7 @@ module Api
                                                         value_type
                                                         template])
 
-        # Need to remove this once we implement template and static mapping in frontend
+        # TODO: Need to remove this once we implement template and static mapping in frontend
         if params.to_unsafe_h[:sync][:configuration].is_a?(Hash)
           strong_params.merge!(configuration: params.to_unsafe_h[:sync][:configuration])
         end

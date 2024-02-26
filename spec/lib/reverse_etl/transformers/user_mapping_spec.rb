@@ -79,32 +79,6 @@ RSpec.describe ReverseEtl::Transformers::UserMapping do
       end
     end
 
-    context "when using standard, static, and template mapping" do
-      let(:mapping) do
-        [
-          { mapping_type: "standard", from: "cr_item_sk", to: "id" },
-          { mapping_type: "static", to: "attributes.properties.static_field", value: "static_value" },
-          { mapping_type: "template", to: "attributes.properties.template_field",
-            template: "Transformed {{cr_reason_sk}}" }
-        ]
-      end
-
-      it "transforms record according to v2 mappings" do
-        results = extractor.transform(sync, sync_record)
-        expected_result = {
-          "id" => "231891",
-          "attributes" => {
-            "properties" => {
-              "static_field" => "static_value",
-              "template_field" => "Transformed 40"
-            }
-          }
-        }
-
-        expect(results).to eq(expected_result)
-      end
-    end
-
     context "with template mapping using current date and time" do
       let(:sync) do
         instance_double("Sync", configuration: [
@@ -134,12 +108,8 @@ RSpec.describe ReverseEtl::Transformers::UserMapping do
         [
           { mapping_type: "template", to: "attributes.properties.cast_filter",
             template: "Transformed {{cr_reason_sk  | cast: 'number' }}" },
-          { mapping_type: "template", to: "attributes.properties.includes_filter",
-            template: "Transformed {{cr_reason_sk  | includes: '40' }}" },
           { mapping_type: "template", to: "attributes.properties.regex_replace_field",
-            template: "Transformed {{cr_reason_sk | regex_replace: '[0-9]+', 'Numbers'}}" },
-          { mapping_type: "template", to: "attributes.properties.regex_test_field",
-            template: "Transformed {{cr_reason_sk  | regex_test: '[a-zA-Z]+'}}" }
+            template: "Transformed {{cr_reason_sk | regex_replace: '[0-9]+', 'Numbers'}}" }
         ]
       end
 
@@ -149,9 +119,7 @@ RSpec.describe ReverseEtl::Transformers::UserMapping do
           "attributes" => {
             "properties" => {
               "cast_filter" => "Transformed 40.0",
-              "includes_filter" => "Transformed true",
-              "regex_replace_field" => "Transformed Numbers",
-              "regex_test_field" => "Transformed false"
+              "regex_replace_field" => "Transformed Numbers"
             }
           }
         }

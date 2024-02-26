@@ -23,16 +23,6 @@ RSpec.describe Liquid::CustomFilters do
     end
   end
 
-  describe ".includes" do
-    it "returns true if input includes substring" do
-      expect(includes("hello world", "world")).to be true
-    end
-
-    it "returns false if input does not include substring" do
-      expect(includes("hello world", "mars")).to be false
-    end
-  end
-
   describe ".regex_replace" do
     it "replaces matching substrings" do
       expect(regex_replace("hello world", "world", "mars")).to eq("hello mars")
@@ -40,20 +30,6 @@ RSpec.describe Liquid::CustomFilters do
 
     it "supports regex flags" do
       expect(regex_replace("Hello World", "world", "mars", "i")).to eq("Hello mars")
-    end
-  end
-
-  describe ".regex_test" do
-    it "returns true if input matches the pattern" do
-      expect(regex_test("hello world", "world")).to be true
-    end
-
-    it "returns false if input does not match the pattern" do
-      expect(regex_test("hello world", "^world")).to be false
-    end
-
-    it "supports regex flags" do
-      expect(regex_test("Hello World", "hello", "", "i")).to be true
     end
   end
 end

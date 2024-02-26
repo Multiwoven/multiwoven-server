@@ -13,18 +13,18 @@ module Liquid
       method ? apply_cast_method(input, method) : input
     end
 
-    def includes(input, substring)
-      input.include?(substring)
-    end
-
     def regex_replace(input, pattern, replacement = "", flags = "")
       re = build_regexp(pattern, flags)
       input.gsub(re, replacement)
     end
 
-    def regex_test(input, pattern, _replacement = "", flags = "")
+    def match_regex(input, pattern, flags = "")
       re = build_regexp(pattern, flags)
-      re.match?(input)
+      if re.match?(input)
+        input
+      else
+        Raise StandardError, "Input does not match regex pattern"
+      end
     end
 
     private

@@ -22,6 +22,7 @@ module Syncs
 
     def catalog_mapping_types
       {
+        standard: "",
         static: static_configuration,
         template: {
           variable: template_variables,
@@ -67,17 +68,9 @@ module Syncs
           description: "Cast input to specified type. Supported values: string, number, boolean",
           value: "{{ cast: '<string>' }}"
         },
-        includes: {
-          description: "Check input for a substring. This function can be used for control flow.",
-          value: "{{ includes : '<substring>' }}"
-        },
         regex_replace: {
           description: "Search and replace substrings of input using RegEx",
           value: "{{ regex_replace : '<[a-zA-Z]>', '<replacement>', '<flags>' }}"
-        },
-        regex_test: {
-          description: "Check input for a RegEx match. Row will be rejected if no match is found",
-          value: "{{ regex_test : '<[a-zA-Z]>', '<flags>' }}"
         }
       }
     end

@@ -78,8 +78,8 @@ RSpec.describe Syncs::SyncConfigurations, type: :interactor do
               describe "filter configuration" do
                 let(:filter_config) { template_config[:filter] }
 
-                it "includes expected keys for cast, includes, regex_replace, and regex_test filters" do
-                  expect(filter_config.keys).to match_array(%i[cast includes regex_replace regex_test])
+                it "includes expected keys for cast and regex_replace filters" do
+                  expect(filter_config.keys).to match_array(%i[cast regex_replace])
                 end
 
                 it "specifies the description and value for the cast filter correctly" do
@@ -89,24 +89,10 @@ RSpec.describe Syncs::SyncConfigurations, type: :interactor do
                   )
                 end
 
-                it "specifies the description and value for the includes filter correctly" do
-                  expect(filter_config[:includes]).to include(
-                    description: a_string_including("Check input for a substring"),
-                    value: a_string_including("{{ includes :")
-                  )
-                end
-
                 it "specifies the description and value for the regex_replace filter correctly" do
                   expect(filter_config[:regex_replace]).to include(
                     description: a_string_including("Search and replace substrings of input using RegEx"),
                     value: a_string_including("{{ regex_replace :")
-                  )
-                end
-
-                it "specifies the description and value for the regex_test filter correctly" do
-                  expect(filter_config[:regex_test]).to include(
-                    description: a_string_including("Check input for a RegEx match"),
-                    value: a_string_including("{{ regex_test :")
                   )
                 end
               end

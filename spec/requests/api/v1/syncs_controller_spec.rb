@@ -140,6 +140,18 @@ RSpec.describe "Api::V1::SyncsController", type: :request do
         expect(response).to have_http_status(:bad_request)
       end
     end
+
+    context "when stream name is not present" do
+      it "creates a new sync and returns success" do
+        error_message = "Add a valid stream_name associated with destination connector"
+        request_body[:sync][:stream_name] = "random"
+        post "/api/v1/syncs", params: request_body.to_json, headers: { "Content-Type": "application/json" }
+          .merge(auth_headers(user))
+
+        result = JSON.parse(response.body)
+        expect(result["errors"][0]["source"]["stream_name"]).to eq(error_message)
+      end
+    end
   end
 
   describe "PUT /api/v1/syncs - Update sync" do
