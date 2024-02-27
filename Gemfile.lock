@@ -2095,8 +2095,8 @@ DEPENDENCIES
   jbuilder
   jwt
   kaminari
-  multiwoven-integrations (~> 0.1.29)
   liquid
+  multiwoven-integrations (~> 0.1.29)
   newrelic_rpm
   parallel
   pg (~> 1.1)
