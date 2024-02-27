@@ -7,6 +7,7 @@ ruby "3.2.0"
 # Core
 gem "aasm"
 gem "aws-sdk"
+gem "groupdate"
 gem "interactor", "~> 3.0"
 
 gem "ruby-odbc", git: "https://github.com/Multiwoven/ruby-odbc.git"
@@ -26,6 +27,7 @@ gem "dry-validation"
 gem "jbuilder"
 gem "jwt"
 gem "kaminari"
+gem "liquid"
 gem "rack-cors"
 
 # AuthN & AuthZ
@@ -51,6 +53,7 @@ group :development, :test do
   gem "shoulda-matchers", "~> 5.0"
   gem "simplecov", require: false
   gem "simplecov_json_formatter", require: false
+  gem "timecop"
 end
 
 # Development Environment
