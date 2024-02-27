@@ -120,6 +120,13 @@ RSpec.describe ReverseEtl::Loaders::Standard do
           expect(sync_record.status).to eq("failed")
         end
       end
+
+      it "request concurrency" do
+        allow(sync_individual.destination.connector_client).to receive(:new).and_return(client)
+        allow(client).to receive(:write).with(sync_individual.to_protocol, [transform]).and_return(multiwoven_message)
+        expect(Parallel).to receive(:each).with(anything, in_threads: catalog.catalog["request_rate_concurrency"]).once
+        subject.write(sync_run_individual.id, activity)
+      end
     end
   end
 end
