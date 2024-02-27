@@ -11,6 +11,9 @@ RSpec.describe ReverseEtl::Loaders::Standard do
     let!(:catalog) do
       create(:catalog, connector: destination,
                        catalog: {
+                         "request_rate_limit" => 60,
+                         "request_rate_limit_unit" => "minute",
+                         "request_rate_concurrency" => 2,
                          "streams" => [{ "name" => "batch", "batch_support" => true, "batch_size" => 10,
                                          "json_schema" => {} },
                                        { "name" => "individual", "batch_support" => false, "batch_size" => 1,
