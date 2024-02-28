@@ -7,6 +7,7 @@ module ReverseEtl
 
       # TODO: Make it as class method
       def read(sync_run_id, activity)
+        total_query_count = 0
         sync_run = setup_sync_run(sync_run_id)
         source_client = setup_source_client(sync_run.sync)
 
@@ -14,6 +15,7 @@ module ReverseEtl
         model = sync_run.sync.model
 
         ReverseEtl::Utils::BatchQuery.execute_in_batches(batch_query_params) do |records, current_offset|
+          total_query_count += records.count
           process_records(records, sync_run, model)
           heartbeat(activity)
           sync_run.update(current_offset:)

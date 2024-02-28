@@ -5,8 +5,7 @@ require "rails_helper"
 RSpec.describe SyncRun, type: :model do
   it { should validate_presence_of(:sync_id) }
   it { should validate_presence_of(:status) }
-  it { should validate_presence_of(:started_at) }
-  it { should validate_presence_of(:finished_at) }
+  it { should validate_presence_of(:total_query_rows) }
   it { should validate_presence_of(:total_rows) }
   it { should validate_presence_of(:successful_rows) }
   it { should validate_presence_of(:failed_rows) }
@@ -19,6 +18,8 @@ RSpec.describe SyncRun, type: :model do
   it { should have_many(:sync_records) }
 
   describe "enum for status" do
-    it { should define_enum_for(:status).with_values(%i[pending in_progress success failed incomplete]) }
+    it {
+      should define_enum_for(:status).with_values(%i[pending started querying queued in_progress success paused failed])
+    }
   end
 end
