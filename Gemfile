@@ -89,3 +89,8 @@ end
 # gem "image_processing", "~> 1.2"  # For image variants if you decide to use Active Storage
 
 # NOTE: Removed unused or commented-out gems for better readability.
+
+gem "opentelemetry-sdk", "~> 1.4"
+gem "opentelemetry-instrumentation-all", "~> 0.60.0"
+
+gem "opentelemetry-exporter-otlp", "~> 0.26.3"
