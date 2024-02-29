@@ -177,7 +177,7 @@ RSpec.describe Sync, type: :model do
     end
 
     it "transitions from pending to healthy" do
-      expect(sync).to transition_from(:pending).to(:healthy).on_event(:complete_successfully)
+      expect(sync).to transition_from(:pending).to(:healthy).on_event(:complete)
     end
 
     it "transitions from pending to failed" do
@@ -189,13 +189,21 @@ RSpec.describe Sync, type: :model do
     end
 
     it "transitions from any state to disabled" do
-      sync.complete_successfully
+      sync.complete
       expect(sync).to transition_from(:healthy).to(:disabled).on_event(:disable)
     end
 
     it "transitions from disabled to pending" do
       sync.disable
       expect(sync).to transition_from(:disabled).to(:pending).on_event(:enable)
+    end
+
+    describe "#set_defaults" do
+      let(:new_sync) { Sync.new }
+
+      it "sets default values" do
+        expect(new_sync.status).to eq("pending")
+      end
     end
 
     describe "AASM states" do
@@ -211,44 +219,45 @@ RSpec.describe Sync, type: :model do
         end
 
         it "transitions from pending to healthy" do
-          expect(sync).to transition_from(:pending).to(:healthy).on_event(:complete_successfully)
+          expect(sync).to transition_from(:pending).to(:healthy).on_event(:complete)
+          expect(sync).to have_state(:healthy)
         end
 
         it "transitions from pending to failed" do
           expect(sync).to transition_from(:pending).to(:failed).on_event(:fail)
+          expect(sync).to have_state(:failed)
         end
 
         it "transitions from any state to disabled" do
           expect(sync).to transition_from(:pending).to(:disabled).on_event(:disable)
+          expect(sync).to have_state(:disabled)
         end
 
         it "transitions from any state to disabled" do
-          sync.complete_successfully
+          sync.complete
           expect(sync).to transition_from(:healthy).to(:disabled).on_event(:disable)
+          expect(sync).to have_state(:disabled)
         end
       end
 
       context "when transition is not allowed" do
         it "does not transition from disable to healthy directly" do
-          sync.complete_successfully
-          expect(sync.aasm.current_state).to eq(:healthy)
+          sync.complete
+          expect(sync).to have_state(:healthy)
           expect(sync).to transition_from(:healthy).to(:disabled).on_event(:disable)
-
+          expect(sync).to have_state(:disabled)
           expect do
-            sync.complete_successfully
+            sync.complete
           end.to raise_error(AASM::InvalidTransition)
-
-          expect(sync.aasm.current_state).to eq(:disabled)
+          expect(sync).to have_state(:disabled)
         end
         it "does not transition from healthy to pending directly" do
-          sync.complete_successfully
-          expect(sync.aasm.current_state).to eq(:healthy)
-
+          sync.complete
+          expect(sync).to have_state(:healthy)
           expect do
             sync.enable
           end.to raise_error(AASM::InvalidTransition)
-
-          expect(sync.aasm.current_state).to eq(:healthy)
+          expect(sync).to have_state(:healthy)
         end
       end
     end

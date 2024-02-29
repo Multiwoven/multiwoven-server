@@ -47,13 +47,13 @@ class Sync < ApplicationRecord
 
   default_scope { order(updated_at: :desc) }
 
-  aasm column: "status" do
+  aasm column: :status, whiny_transitions: true do
     state :pending, initial: true
     state :healthy
     state :failed
     state :disabled
 
-    event :complete_successfully do
+    event :complete do
       transitions from: :pending, to: :healthy
     end
 
