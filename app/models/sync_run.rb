@@ -50,7 +50,7 @@ class SyncRun < ApplicationRecord
     end
 
     event :progress do
-      transitions from: %i[queued paused], to: :in_progress
+      transitions from: %i[queued paused in_progress], to: :in_progress
     end
 
     event :pause do

@@ -32,49 +32,49 @@ RSpec.describe Activities::ExtractorActivity do
     it "sync run pending to started" do
       expect(sync_run).to have_state(:pending)
       activity.execute(sync_run.id)
-      sync_run_after = SyncRun.find(sync_run.id)
-      expect(sync_run_after).to have_state(:started)
-      expect(sync_run_after.sync_id).to eq(sync.id)
-      expect(sync_run_after.workspace_id).to eq(sync.workspace_id)
-      expect(sync_run_after.source_id).to eq(sync.source_id)
-      expect(sync_run_after.destination_id).to eq(sync.destination_id)
-      expect(sync_run_after.model_id).to eq(sync.model_id)
+      sync_run.reload
+      expect(sync_run).to have_state(:started)
+      expect(sync_run.sync_id).to eq(sync.id)
+      expect(sync_run.workspace_id).to eq(sync.workspace_id)
+      expect(sync_run.source_id).to eq(sync.source_id)
+      expect(sync_run.destination_id).to eq(sync.destination_id)
+      expect(sync_run.model_id).to eq(sync.model_id)
     end
 
     it "sync run started to started" do
       expect(sync_run_satrted).to have_state(:started)
       activity.execute(sync_run_satrted.id)
-      sync_run_after = SyncRun.find(sync_run_satrted.id)
-      expect(sync_run_after).to have_state(:started)
-      expect(sync_run_after.sync_id).to eq(sync.id)
-      expect(sync_run_after.workspace_id).to eq(sync.workspace_id)
-      expect(sync_run_after.source_id).to eq(sync.source_id)
-      expect(sync_run_after.destination_id).to eq(sync.destination_id)
-      expect(sync_run_after.model_id).to eq(sync.model_id)
+      sync_run_satrted.reload
+      expect(sync_run_satrted).to have_state(:started)
+      expect(sync_run_satrted.sync_id).to eq(sync.id)
+      expect(sync_run_satrted.workspace_id).to eq(sync.workspace_id)
+      expect(sync_run_satrted.source_id).to eq(sync.source_id)
+      expect(sync_run_satrted.destination_id).to eq(sync.destination_id)
+      expect(sync_run_satrted.model_id).to eq(sync.model_id)
     end
 
     it "sync run querying to started" do
       expect(sync_run_querying).to have_state(:querying)
       activity.execute(sync_run_querying.id)
-      sync_run_after = SyncRun.find(sync_run_querying.id)
-      expect(sync_run_after).to have_state(:started)
-      expect(sync_run_after.sync_id).to eq(sync.id)
-      expect(sync_run_after.workspace_id).to eq(sync.workspace_id)
-      expect(sync_run_after.source_id).to eq(sync.source_id)
-      expect(sync_run_after.destination_id).to eq(sync.destination_id)
-      expect(sync_run_after.model_id).to eq(sync.model_id)
+      sync_run_querying.reload
+      expect(sync_run_querying).to have_state(:started)
+      expect(sync_run_querying.sync_id).to eq(sync.id)
+      expect(sync_run_querying.workspace_id).to eq(sync.workspace_id)
+      expect(sync_run_querying.source_id).to eq(sync.source_id)
+      expect(sync_run_querying.destination_id).to eq(sync.destination_id)
+      expect(sync_run_querying.model_id).to eq(sync.model_id)
     end
 
-    context "when sync run may not start" do
+    context "when sync run not start" do
       it "trying to queued to start" do
         expect(sync_run_queued).to have_state(:queued)
 
         expect do
           activity.execute(sync_run_queued.id)
         end.to raise_error(Activities::ExtractorActivity::SyncRunStateExeption)
-        sync_run_after = SyncRun.find(sync_run_queued.id)
-        expect(sync_run_after).to have_state(:failed)
-        expect(sync_run_after.sync).to have_state(:failed)
+        sync_run_queued.reload
+        expect(sync_run_queued).to have_state(:failed)
+        expect(sync_run_queued.sync).to have_state(:failed)
       end
     end
   end

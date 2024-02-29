@@ -5,11 +5,15 @@ module Activities
     def execute(sync_run_id)
       sync_run = SyncRun.find(sync_run_id)
 
-      return unless sync_run.in_progress?
+      unless sync_run.may_complete?
+        update_failure(sync_run)
+        raise StandardError,
+              "SyncRun cannot transition to 'success' from its current state: #{sync_run.status}"
+      end
+
+      update_sucess(sync_run)
 
       total_rows, successful_rows, failed_rows = fetch_record_counts(sync_run)
-
-      transition_states(sync_run)
 
       sync_run.update!(
         finished_at: Time.zone.now,
@@ -28,12 +32,16 @@ module Activities
       [total, success, failed]
     end
 
-    def transition_states(sync_run)
-      return unless sync_run.may_complete?
-
-      sync_run.complete
+    def update_sucess(sync_run)
+      sync_run.complete!
       sync = sync_run.sync
-      sync.complete if sync.may_complete?
+      sync.complete!
+    end
+
+    def update_failure(sync_run)
+      sync_run.abort!
+      sync = sync_run.sync
+      sync.fail!
     end
   end
 end

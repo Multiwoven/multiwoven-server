@@ -8,7 +8,12 @@ module ReverseEtl
       # TODO: Make it as class method
       def read(sync_run_id, activity)
         total_query_count = 0
-        sync_run = setup_sync_run(sync_run_id)
+        sync_run = SyncRun.find(sync_run_id)
+
+        return unless sync_run.may_query?
+
+        sync_run.query!
+
         source_client = setup_source_client(sync_run.sync)
 
         batch_query_params = batch_params(source_client, sync_run)
@@ -21,7 +26,7 @@ module ReverseEtl
           sync_run.update(current_offset:)
         end
         # change state querying to queued
-        sync_run.queue if sync_run.may_queue?
+        sync_run.queue!
       end
 
       private
@@ -31,19 +36,11 @@ module ReverseEtl
         raise StandardError, "Cancel activity request received" if activity.cancel_requested
       end
 
-      def setup_sync_run(sync_run_id)
-        SyncRun.find(sync_run_id).tap do |sync_run|
-          # change state started to querying
-          sync_run.query if sync_run.may_query?
-        end
-      end
-
       def setup_source_client(sync)
         sync.source.connector_client.new
       end
 
       def process_records(records, sync_run, model)
-        # TODO: parellelize this
         Parallel.each(records, in_threads: THREAD_COUNT) do |message|
           process_record(message, sync_run, model)
         end
