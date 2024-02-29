@@ -6,6 +6,9 @@ module ReverseEtl
       THREAD_COUNT = (ENV["SYNC_LOADER_THREAD_POOL_SIZE"] || "5").to_i
       def write(sync_run_id, activity)
         sync_run = SyncRun.find(sync_run_id)
+        # change state queued to in_progress
+        sync_run.progress if sync_run.may_progress?
+
         sync = sync_run.sync
         sync_config = sync.to_protocol
         if sync_config.stream.batch_support

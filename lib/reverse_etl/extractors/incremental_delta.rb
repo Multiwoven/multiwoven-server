@@ -20,6 +20,8 @@ module ReverseEtl
           heartbeat(activity)
           sync_run.update(current_offset:)
         end
+        # change state querying to queued
+        sync_run.queue if sync_run.may_queue?
       end
 
       private
@@ -31,7 +33,8 @@ module ReverseEtl
 
       def setup_sync_run(sync_run_id)
         SyncRun.find(sync_run_id).tap do |sync_run|
-          sync_run.update(status: :in_progress, started_at: DateTime.now)
+          # change state started to querying
+          sync_run.query if sync_run.may_query?
         end
       end
 

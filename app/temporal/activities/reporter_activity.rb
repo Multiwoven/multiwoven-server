@@ -9,12 +9,13 @@ module Activities
 
       total_rows, successful_rows, failed_rows = fetch_record_counts(sync_run)
 
+      transition_states(sync_run)
+
       sync_run.update!(
         finished_at: Time.zone.now,
         total_rows:,
         successful_rows:,
-        failed_rows:,
-        status: determine_status(failed_rows, total_rows)
+        failed_rows:
       )
     end
 
@@ -27,10 +28,12 @@ module Activities
       [total, success, failed]
     end
 
-    def determine_status(failed_rows, total_rows)
-      # TODO: Update status as incomplete if sync run retry exhausted
-      # Sync failure should be marked based on threshold failure percentage
-      failed_rows == total_rows ? :failed : :success
+    def transition_states(sync_run)
+      return unless sync_run.may_complete?
+
+      sync_run.complete
+      sync = sync_run.sync
+      sync.complete if sync.may_complete?
     end
   end
 end

@@ -37,6 +37,8 @@ class SyncRun < ApplicationRecord
 
     event :start do
       transitions from: :pending, to: :started
+      transitions from: :started, to: :started
+      transitions from: :querying, to: :started
     end
 
     event :query do
@@ -60,7 +62,7 @@ class SyncRun < ApplicationRecord
     end
 
     event :abort do
-      transitions from: %i[pending started querying queued in_progress paused], to: :failed
+      transitions from: %i[pending started querying queued in_progress paused failed], to: :failed
     end
   end
 
