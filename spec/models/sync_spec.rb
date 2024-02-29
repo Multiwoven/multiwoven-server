@@ -228,7 +228,12 @@ RSpec.describe Sync, type: :model do
           expect(sync).to have_state(:failed)
         end
 
-        it "transitions from any state to disabled" do
+        it "transitions from healthy to failed" do
+          expect(sync).to transition_from(:healthy).to(:failed).on_event(:fail)
+          expect(sync).to have_state(:failed)
+        end
+
+        it "transitions from any healthy to disabled" do
           expect(sync).to transition_from(:pending).to(:disabled).on_event(:disable)
           expect(sync).to have_state(:disabled)
         end

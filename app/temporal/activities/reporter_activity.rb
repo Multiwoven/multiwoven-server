@@ -5,11 +5,7 @@ module Activities
     def execute(sync_run_id)
       sync_run = SyncRun.find(sync_run_id)
 
-      unless sync_run.may_complete?
-        update_failure(sync_run)
-        raise StandardError,
-              "SyncRun cannot transition to 'success' from its current state: #{sync_run.status}"
-      end
+      return unless sync_run.may_complete?
 
       update_sucess(sync_run)
 
@@ -36,12 +32,6 @@ module Activities
       sync_run.complete!
       sync = sync_run.sync
       sync.complete!
-    end
-
-    def update_failure(sync_run)
-      sync_run.abort!
-      sync = sync_run.sync
-      sync.fail!
     end
   end
 end

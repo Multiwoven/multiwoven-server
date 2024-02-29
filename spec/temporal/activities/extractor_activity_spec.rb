@@ -68,13 +68,9 @@ RSpec.describe Activities::ExtractorActivity do
     context "when sync run not start" do
       it "trying to queued to start" do
         expect(sync_run_queued).to have_state(:queued)
-
-        expect do
-          activity.execute(sync_run_queued.id)
-        end.to raise_error(Activities::ExtractorActivity::SyncRunStateExeption)
+        activity.execute(sync_run_queued.id)
         sync_run_queued.reload
-        expect(sync_run_queued).to have_state(:failed)
-        expect(sync_run_queued.sync).to have_state(:failed)
+        expect(sync_run_queued).to have_state(:queued)
       end
     end
   end

@@ -161,12 +161,9 @@ RSpec.describe ReverseEtl::Loaders::Standard do
         allow(client).to receive(:write).with(sync_individual.to_protocol, [transform]).and_return(multiwoven_message)
         expect(subject).not_to receive(:heartbeat)
         expect(sync_run_started).to have_state(:started)
-        expect do
-          subject.write(sync_run_started.id, activity)
-        end.to raise_error(StandardError)
+        subject.write(sync_run_started.id, activity)
         sync_run_started.reload
-        expect(sync_run_started).to have_state(:failed)
-        expect(sync_run_started.sync).to have_state(:failed)
+        expect(sync_run_started).to have_state(:started)
       end
     end
   end

@@ -7,11 +7,7 @@ module ReverseEtl
       def write(sync_run_id, activity)
         sync_run = SyncRun.find(sync_run_id)
 
-        unless sync_run.may_progress?
-          update_failure(sync_run)
-          raise StandardError,
-                "SyncRun cannot transition to 'in_progress' from its current state: #{sync_run.status}"
-        end
+        return unless sync_run.may_progress?
 
         # change state queued to in_progress
         sync_run.progress!
@@ -92,12 +88,6 @@ module ReverseEtl
       def heartbeat(activity)
         activity.heartbeat
         raise StandardError, "Cancel activity request received" if activity.cancel_requested
-      end
-
-      def update_failure(sync_run)
-        sync_run.abort!
-        sync = sync_run.sync
-        sync.fail!
       end
     end
   end

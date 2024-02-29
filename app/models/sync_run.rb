@@ -36,9 +36,7 @@ class SyncRun < ApplicationRecord
     state :failed
 
     event :start do
-      transitions from: :pending, to: :started
-      transitions from: :started, to: :started
-      transitions from: :querying, to: :started
+      transitions from: %i[pending started querying], to: :started
     end
 
     event :query do
