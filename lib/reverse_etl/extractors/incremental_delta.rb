@@ -9,8 +9,12 @@ module ReverseEtl
       def read(sync_run_id, activity)
         total_query_count = 0
         sync_run = SyncRun.find(sync_run_id)
-
-        return unless sync_run.may_query?
+        unless sync_run.may_query?
+          Temporal.logger.error(error_message: "SyncRun cannot querying from its current state: #{sync_run.status}",
+                                sync_run_id: sync_run.id,
+                                stack_trace: nil)
+          return
+        end
 
         sync_run.query!
 

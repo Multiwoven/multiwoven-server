@@ -7,7 +7,12 @@ module ReverseEtl
       def write(sync_run_id, activity)
         sync_run = SyncRun.find(sync_run_id)
 
-        return unless sync_run.may_progress?
+        unless sync_run.may_progress?
+          Temporal.logger.error(error_message: "SyncRun cannot progress from its current state: #{sync_run.status}",
+                                sync_run_id: sync_run.id,
+                                stack_trace: nil)
+          return
+        end
 
         # change state queued to in_progress
         sync_run.progress!

@@ -5,7 +5,12 @@ module Activities
     def execute(sync_run_id)
       sync_run = SyncRun.find(sync_run_id)
 
-      return unless sync_run.may_complete?
+      unless sync_run.may_complete?
+        Temporal.logger.error(error_message: "SyncRun cannot complete from its current state: #{sync_run.status}",
+                              sync_run_id: sync_run.id,
+                              stack_trace: nil)
+        return
+      end
 
       update_sucess(sync_run)
 

@@ -117,7 +117,7 @@ RSpec.describe ReverseEtl::Extractors::IncrementalDelta do
         expect(subject).not_to receive(:setup_source_client)
         expect(subject).not_to receive(:process_records)
         expect(subject).not_to receive(:process_record)
-        expect { subject.read(sync_run_pending.id, activity) }
+        subject.read(sync_run_pending.id, activity)
         expect(sync_run_pending).to have_state(:pending)
       end
     end
