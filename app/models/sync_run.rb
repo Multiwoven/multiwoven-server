@@ -35,6 +35,11 @@ class SyncRun < ApplicationRecord
     state :paused
     state :failed
 
+    # Most states, including "started," allow for a retry by transitioning back to the same state
+    # example:
+    # If a temporal activity fails while in the "Started" state, a temporal retry may be initiated.
+    # For this retry to occur, the activity transitions from the "Started" state back to "Started," indicating
+    # a reattempt of the operation.
     event :start do
       transitions from: %i[pending started querying], to: :started
     end
