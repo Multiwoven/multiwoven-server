@@ -11,7 +11,7 @@ RSpec.describe Activities::ExtractorActivity do
     let!(:catalog) { create(:catalog, connector: destination) }
     let!(:sync) { create(:sync, sync_interval: 3, sync_interval_unit: "hours", source:, destination:) }
     let(:sync_run) { create(:sync_run, sync:, workspace: sync.workspace, source:, destination:, model: sync.model) }
-    let(:sync_run_satrted) do
+    let(:sync_run_started) do
       create(:sync_run, sync:, workspace: sync.workspace, source:, destination:, model: sync.model, status: "started")
     end
     let(:sync_run_querying) do
@@ -42,15 +42,15 @@ RSpec.describe Activities::ExtractorActivity do
     end
 
     it "sync run started to started" do
-      expect(sync_run_satrted).to have_state(:started)
-      activity.execute(sync_run_satrted.id)
-      sync_run_satrted.reload
-      expect(sync_run_satrted).to have_state(:started)
-      expect(sync_run_satrted.sync_id).to eq(sync.id)
-      expect(sync_run_satrted.workspace_id).to eq(sync.workspace_id)
-      expect(sync_run_satrted.source_id).to eq(sync.source_id)
-      expect(sync_run_satrted.destination_id).to eq(sync.destination_id)
-      expect(sync_run_satrted.model_id).to eq(sync.model_id)
+      expect(sync_run_started).to have_state(:started)
+      activity.execute(sync_run_started.id)
+      sync_run_started.reload
+      expect(sync_run_started).to have_state(:started)
+      expect(sync_run_started.sync_id).to eq(sync.id)
+      expect(sync_run_started.workspace_id).to eq(sync.workspace_id)
+      expect(sync_run_started.source_id).to eq(sync.source_id)
+      expect(sync_run_started.destination_id).to eq(sync.destination_id)
+      expect(sync_run_started.model_id).to eq(sync.model_id)
     end
 
     it "sync run querying to started" do

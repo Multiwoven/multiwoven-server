@@ -10,7 +10,7 @@ module ReverseEtl
         total_query_count = 0
         sync_run = SyncRun.find(sync_run_id)
 
-        return log_error_and_return(sync_run) unless sync_run.may_query?
+        return log_error(sync_run) unless sync_run.may_query?
 
         sync_run.query!
 
@@ -88,7 +88,7 @@ module ReverseEtl
         sync_record.save!
       end
 
-      def log_error_and_return(sync_run)
+      def log_error(sync_run)
         Temporal.logger.error(
           eerror_message: "SyncRun cannot querying from its current state: #{sync_run.status}",
           sync_run_id: sync_run.id,

@@ -17,9 +17,9 @@ module Activities
     def execute(sync_run_id)
       sync_run = SyncRun.find(sync_run_id)
 
-      return log_error_and_return(sync_run) unless sync_run.may_start?
+      return log_error(sync_run) unless sync_run.may_start?
 
-      # state of sync run to started only if current stete in [ pending,started,querying]
+      # state of sync run to started only if current state in [ pending,started,querying]
       sync_run.start
       sync_run.update(started_at: Time.zone.now)
 
@@ -29,7 +29,7 @@ module Activities
       extractor.read(sync_run.id, activity)
     end
 
-    def log_error_and_return(sync_run)
+    def log_error(sync_run)
       Temporal.logger.error(
         eerror_message: "SyncRun cannot start from its current state: #{sync_run.status}",
         sync_run_id: sync_run.id,

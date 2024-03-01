@@ -146,7 +146,7 @@ RSpec.describe ReverseEtl::Loaders::Standard do
       end
     end
 
-    context "when sync run not start" do
+    context "when skip loading when status is corrupted" do
       tracker = Multiwoven::Integrations::Protocol::TrackingMessage.new(
         success: 0,
         failed: 1
@@ -156,7 +156,7 @@ RSpec.describe ReverseEtl::Loaders::Standard do
       let(:multiwoven_message) { tracker.to_multiwoven_message }
       let(:client) { instance_double(sync_individual.destination.connector_client) }
 
-      it "trying to started to in_progrss" do
+      it "sync run started to in_progress" do
         allow(sync_individual.destination.connector_client).to receive(:new).and_return(client)
         allow(client).to receive(:write).with(sync_individual.to_protocol, [transform]).and_return(multiwoven_message)
         expect(subject).not_to receive(:heartbeat)

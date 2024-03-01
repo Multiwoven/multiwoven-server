@@ -7,7 +7,7 @@ module ReverseEtl
       def write(sync_run_id, activity)
         sync_run = SyncRun.find(sync_run_id)
 
-        return log_error_and_return(sync_run) unless sync_run.may_progress?
+        return log_error(sync_run) unless sync_run.may_progress?
 
         # change state queued to in_progress
         sync_run.progress!
@@ -90,7 +90,7 @@ module ReverseEtl
         raise StandardError, "Cancel activity request received" if activity.cancel_requested
       end
 
-      def log_error_and_return(sync_run)
+      def log_error(sync_run)
         Temporal.logger.error(
           eerror_message: "SyncRun cannot progress from its current state: #{sync_run.status}",
           sync_run_id: sync_run.id,
