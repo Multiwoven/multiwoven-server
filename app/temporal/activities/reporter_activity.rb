@@ -5,14 +5,7 @@ module Activities
     def execute(sync_run_id)
       sync_run = SyncRun.find(sync_run_id)
 
-      unless sync_run.may_complete?
-        Temporal.logger.error(error_message: "SyncRun cannot complete from its current state: #{sync_run.status}",
-                              sync_run_id: sync_run.id,
-                              stack_trace: nil)
-        return
-      end
-
-      update_sucess(sync_run)
+      return log_error_and_return(sync_run) unless sync_run.may_complete?
 
       total_rows, successful_rows, failed_rows = fetch_record_counts(sync_run)
 
@@ -22,6 +15,7 @@ module Activities
         successful_rows:,
         failed_rows:
       )
+      sync_run.update_success
     end
 
     private
@@ -33,10 +27,12 @@ module Activities
       [total, success, failed]
     end
 
-    def update_sucess(sync_run)
-      sync_run.complete!
-      sync = sync_run.sync
-      sync.complete!
+    def log_error_and_return(sync_run)
+      Temporal.logger.error(
+        error_message: "SyncRun cannot complete from its current state: #{sync_run.status}",
+        sync_run_id: sync_run.id,
+        stack_trace: nil
+      )
     end
   end
 end

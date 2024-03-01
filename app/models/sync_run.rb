@@ -71,4 +71,9 @@ class SyncRun < ApplicationRecord
     self.successful_rows ||= 0
     self.failed_rows ||= 0
   end
+
+  def update_success
+    complete!
+    sync.complete!
+  end
 end
