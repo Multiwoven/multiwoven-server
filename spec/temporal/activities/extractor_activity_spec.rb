@@ -65,8 +65,8 @@ RSpec.describe Activities::ExtractorActivity do
       expect(sync_run_querying.model_id).to eq(sync.model_id)
     end
 
-    context "when sync run not start" do
-      it "trying to queued to start" do
+    context "when skip loading when status is corrupted" do
+      it "sync run state update to queued to start" do
         expect(sync_run_queued).to have_state(:queued)
         activity.execute(sync_run_queued.id)
         sync_run_queued.reload
