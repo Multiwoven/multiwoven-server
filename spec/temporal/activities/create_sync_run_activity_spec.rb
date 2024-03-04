@@ -33,7 +33,7 @@ RSpec.describe Activities::CreateSyncRunActivity do
         create(:sync_run, sync:, status: :success)
       end
 
-      it "does not create a new SyncRun" do
+      it "create a new SyncRun" do
         expect do
           sync_run_id = activity.execute(sync.id)
           sync_run = SyncRun.find(sync_run_id)
