@@ -16,7 +16,7 @@ module Api
       private
 
       def set_sync
-        @sync = current_workspace.syncs.find(params[:sync_id])
+        @sync = current_workspace.syncs.find_by(id: params[:sync_id])
         render_error(message: "Sync not found", status: :not_found) unless @sync
       end
     end
