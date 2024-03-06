@@ -27,7 +27,7 @@ class SyncRun < ApplicationRecord
   has_many :sync_records, dependent: :nullify
 
   after_initialize :set_defaults, if: :new_record?
-  after_discard :post_delete_sync_run
+  after_discard :perform_post_discard_sync_run
 
   aasm column: :status, whiny_transitions: true do
     state :pending, initial: true
@@ -81,7 +81,7 @@ class SyncRun < ApplicationRecord
     self.failed_rows ||= 0
   end
 
-  def post_delete_sync_run
+  def perform_post_discard_sync_run
     sync_records.update_all(sync_run_id: nil) # rubocop:disable Rails/SkipsModelValidations
   end
 

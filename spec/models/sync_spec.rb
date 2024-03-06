@@ -305,7 +305,7 @@ RSpec.describe Sync, type: :model do
       expect(sync_run.discarded_at).not_to be_nil
     end
 
-    it "calls the post_delete_sync method" do
+    it "calls the perform_post_discard_sync method" do
       expect(sync_discard.discarded_at).not_to be_nil
       expect(Temporal).to have_received(:start_workflow)
         .with(Workflows::TerminateWorkflow, sync.workflow_id)

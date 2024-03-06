@@ -143,7 +143,7 @@ RSpec.describe SyncRun, type: :model do
       expect(sync_run.discarded_at).to be_nil
     end
 
-    it "calls the post_delete_sync_run method" do
+    it "calls the perform_post_discard_sync_run method" do
       sync_record.reload
       expect(sync_record.sync_run_id).to be_nil
     end

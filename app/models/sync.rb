@@ -45,7 +45,7 @@ class Sync < ApplicationRecord
 
   after_initialize :set_defaults, if: :new_record?
   after_save :schedule_sync, if: :schedule_sync?
-  after_discard :post_delete_sync
+  after_discard :perform_post_discard_sync
 
   default_scope -> { kept.order(updated_at: :desc) }
 
@@ -119,7 +119,7 @@ class Sync < ApplicationRecord
     Rails.logger.error "Failed to schedule sync with Temporal. Error: #{e.message}"
   end
 
-  def post_delete_sync
+  def perform_post_discard_sync
     sync_runs.discard_all
     Temporal.start_workflow(
       Workflows::TerminateWorkflow,
