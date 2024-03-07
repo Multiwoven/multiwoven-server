@@ -7,16 +7,15 @@ module ReverseEtl
         total_query_rows = 0
         sync_run = SyncRun.find(sync_run_id)
 
-        return log_error(sync_run) unless sync_run.may_query?
+        return log_sync_run_error(sync_run) unless sync_run.may_query?
 
         sync_run.query!
 
         source_client = setup_source_client(sync_run.sync)
-
-        batch_query_params = batch_params(source_client, sync_run)
         model = sync_run.sync.model
+        batch_query_params = batch_params(source_client, sync_run)
 
-        sync_run.sync_records.delete_all
+        prepare_for_insertion(sync_run)
 
         ReverseEtl::Utils::BatchQuery.execute_in_batches(batch_query_params) do |records, current_offset|
           total_query_rows += records.count
@@ -31,50 +30,67 @@ module ReverseEtl
 
       private
 
+      def prepare_for_insertion(sync_run)
+        SyncRecord.where(sync_id: sync_run.sync_id).delete_all
+      end
+
       def process_records(records, sync_run, model)
-        sync_records_to_save = Parallel.map(records, in_threads: THREAD_COUNT) do |message|
-          build_sync_record(message, sync_run, model)
-          # Use .compact to remove any nil items that might have been added due to errors
-        end.compact
+        sync_records_to_save = build_sync_records_in_parallel(records, sync_run, model)
+        return if sync_records_to_save.empty?
 
-        unless sync_records_to_save.empty?
-          byebug
-          result = SyncRecord.insert_all(sync_records_to_save, # rubocop:disable Rails/SkipsModelValidations
-                                         returning: %w[primary_key])
-          valid_primary_keys = result.rows.flatten
+        result = SyncRecord.insert_all(sync_records_to_save, returning: %w[primary_key]) # rubocop:disable Rails/SkipsModelValidations
+        return if records.count == sync_records_to_save.count && sync_records_to_save.count == result.rows.size
 
-          if sync_records_to_save.count != valid_primary_keys.count
-            error_message = "Mismatch in record count. Expected: #{sync_records_to_save.count}, Successfully Inserted:
-             #{valid_primary_keys.count}"
-            Temporal.logger.error(
-              error_message:,
-              sync_run_id: sync_run.id
-            )
-          end
-        end
+        log_mismatch_error(records, sync_records_to_save, result.rows.flatten,
+                           sync_run)
       rescue StandardError => e
-        Temporal.logger.error(error_message: e.message,
-                              sync_run_id: sync_run.id,
-                              stack_trace: Rails.backtrace_cleaner.clean(e.backtrace))
+        log_error("#{e.message}. Sync ID: #{sync_run.sync_id}, Sync Run ID: #{sync_run.id}.")
+      end
+
+      def build_sync_records_in_parallel(records, sync_run, model)
+        Parallel.map(records, in_threads: THREAD_COUNT) do |message|
+          build_sync_record(message, sync_run, model)
+        end.compact # Ensure to remove nil items potentially added due to primary key check or errors
       end
 
       def build_sync_record(message, sync_run, model)
-        record = message.record
-        primary_key = record.data.with_indifferent_access[model.primary_key]
+        record_data = message.record.data.with_indifferent_access
+        primary_key_value = record_data[model.primary_key]
 
-        sync_run.sync_records.new(
+        if primary_key_value.nil?
+          error_message = "Primary key value is missing for sync_id: #{sync_run.sync_id}, sync_run_id: #{sync_run.id}.
+            Record data: #{record_data.to_json}"
+          log_error(error_message)
+          return nil
+        end
+        {
           sync_id: sync_run.sync_id,
-          primary_key:,
+          primary_key: primary_key_value,
           created_at: DateTime.current,
           sync_run_id: sync_run.id,
-          action: destination_insert,
-          fingerprint: generate_fingerprint(record.data),
-          record: record.data
-        )
+          action: :destination_insert,
+          fingerprint: generate_fingerprint(record_data),
+          record: record_data
+        }
       rescue StandardError => e
-        Temporal.logger.error(error_message: e.message,
-                              sync_run_id: sync_run.id,
-                              stack_trace: Rails.backtrace_cleaner.clean(e.backtrace))
+        error_message = "#{e.message}. Sync ID: #{sync_run.sync_id}, Sync Run ID: #{sync_run.id}.
+          Record data: #{record_data.to_json}"
+        log_error(error_message)
+        nil
+      end
+
+      def log_mismatch_error(records, sync_records_to_save, valid_primary_keys, sync_run)
+        error_message = "Mismatch in record count. Expected to insert #{records.count} records.
+        Sync records to save after process records  #{sync_records_to_save.count} records.
+        Successfully inserted #{valid_primary_keys.count} records.
+        Sync ID: #{sync_run.sync_id}, Sync Run ID: #{sync_run.id}."
+        log_error(error_message)
+      end
+
+      def log_error(error_message)
+        Temporal.logger.error(
+          error_message:
+        )
       end
     end
   end

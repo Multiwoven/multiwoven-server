@@ -8,7 +8,7 @@ module ReverseEtl
         total_query_rows = 0
         sync_run = SyncRun.find(sync_run_id)
 
-        return log_error(sync_run) unless sync_run.may_query?
+        return log_sync_run_error(sync_run) unless sync_run.may_query?
 
         sync_run.query!
 

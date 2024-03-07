@@ -37,9 +37,9 @@ module ReverseEtl
         }
       end
 
-      def log_error(sync_run)
+      def log_sync_run_error(sync_run)
         Temporal.logger.error(
-          eerror_message: "SyncRun cannot querying from its current state: #{sync_run.status}",
+          error_message: "SyncRun cannot querying from its current state: #{sync_run.status}",
           sync_run_id: sync_run.id,
           stack_trace: nil
         )
