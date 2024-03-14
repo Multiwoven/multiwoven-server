@@ -30,6 +30,7 @@ class User < ApplicationRecord
 
   validates :name, :email, presence: true
   VALID_EMAIL_REGEX = /\A[\w+\-.]+@[a-z\d\-.]+\.[a-z]+\z/i
+  VALID_PASSWORD_REGEX = /^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[#?!@$%^&*-])/
   validates :email, format: { with: VALID_EMAIL_REGEX }
   validate :password_complexity
 
@@ -57,7 +58,7 @@ class User < ApplicationRecord
   end
 
   def password_complexity
-    return if password.blank? || password =~ /^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[#?!@$%^&*-])/
+    return if password.blank? || password =~ VALID_PASSWORD_REGEX
 
     errors.add :password,
                "Complexity requirement not met. Length should be 8-128 characters and include: 1 uppercase, 1 lowercase, 1 digit and 1 special character"
