@@ -95,7 +95,7 @@ RSpec.describe User, type: :model do
       user = User.new(password: "password", email: "test@example.com", name: "Test User")
       expect(user).not_to be_valid
       expect(user.errors[:password]).to include(
-        "Complexity requirement not met. Length should be 8-128 characters and include: 1 uppercase, 1 lowercase, 1 digit and 1 special character"
+        "Length should be 8-128 characters and include: 1 uppercase,lowercase,digit and special character"
       )
     end
 

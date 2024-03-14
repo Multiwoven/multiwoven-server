@@ -61,6 +61,6 @@ class User < ApplicationRecord
     return if password.blank? || password =~ VALID_PASSWORD_REGEX
 
     errors.add :password,
-               "Complexity requirement not met. Length should be 8-128 characters and include: 1 uppercase, 1 lowercase, 1 digit and 1 special character"
+               "Length should be 8-128 characters and include: 1 uppercase,lowercase,digit and special character"
   end
 end
