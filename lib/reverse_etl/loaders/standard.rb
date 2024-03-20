@@ -65,7 +65,7 @@ module ReverseEtl
         Parallel.each(sync_run.sync_records.pending.find_in_batches(batch_size:),
                       in_threads: THREAD_COUNT) do |sync_records|
           transformed_records = sync_records.map { |sync_record| transformer.transform(sync, sync_record) }
-          report = client.write(sync_config, transformed_records).tracking
+          report = handle_response(client.write(sync_config, transformed_records))
           heartbeat(activity)
           if report.success.zero?
             failed_sync_records.concat(sync_records.map { |record| record["id"] }.compact)
@@ -78,6 +78,21 @@ module ReverseEtl
                                 stack_trace: Rails.backtrace_cleaner.clean(e.backtrace))
         end
         update_sync_records_status(sync_run, successfull_sync_records, failed_sync_records)
+      end
+
+      def handle_response(report)
+        raise_non_retryable_error(report) unless report.is_a?(Multiwoven::Integrations::Protocol::TrackingMessage)
+        report
+      end
+
+      def raise_non_retryable_error(report)
+        sync_run.failed!
+        Temporal.logger.error(
+          error_message: "Full refresh failed due to non-TrackingMessage report: #{report.class}",
+          sync_run_id: sync_run.id,
+          stack_trace: nil
+        )
+        raise Temporal::ApplicationFailure, "Destination connector error (non-retryable)"
       end
 
       def update_sync_records_status(sync_run, successfull_sync_records, failed_sync_records)
