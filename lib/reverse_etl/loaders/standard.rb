@@ -37,13 +37,14 @@ module ReverseEtl
 
           Parallel.each(sync_records, in_threads: concurrency) do |sync_record|
             record = transformer.transform(sync, sync_record)
-            report = handle_response(client.write(sync_config, [record]))
-
+            report = handle_response(client.write(sync_config, [record]), sync_run)
             if report.tracking.success.zero?
               failed_sync_records << sync_record.id
             else
               successfull_sync_records << sync_record.id
             end
+          rescue Activities::LoaderActivity::FullRefreshFailed
+            raise
           rescue StandardError => e
             Rails.logger(e)
           end
@@ -53,7 +54,7 @@ module ReverseEtl
         end
       end
 
-      def process_batch_records(sync_run, sync, sync_config, _activity)
+      def process_batch_records(sync_run, sync, sync_config, activity)
         transformer = Transformers::UserMapping.new
         client = sync.destination.connector_client.new
         batch_size = sync_config.stream.batch_size
@@ -72,6 +73,8 @@ module ReverseEtl
           else
             successfull_sync_records.concat(sync_records.map { |record| record["id"] }.compact)
           end
+        rescue Activities::LoaderActivity::FullRefreshFailed
+          raise
         rescue StandardError => e
           Temporal.logger.error(error_message: e.message,
                                 sync_run_id: sync_run.id,
