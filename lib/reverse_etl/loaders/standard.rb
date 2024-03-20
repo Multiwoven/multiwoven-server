@@ -95,7 +95,7 @@ module ReverseEtl
           sync_run_id: sync_run.id,
           stack_trace: nil
         )
-        raise Temporal::ApplicationFailure, "Destination connector error (non-retryable)"
+        raise Activities::LoaderActivity::FullRefreshFailed, "Full refresh failed (non-retryable)"
       end
 
       def update_sync_records_status(sync_run, successfull_sync_records, failed_sync_records)
