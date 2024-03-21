@@ -15,7 +15,8 @@ module ReverseEtl
         model = sync_run.sync.model
         batch_query_params = batch_params(source_client, sync_run)
 
-        prepare_for_insertion(sync_run)
+        # TODO: Need to move on flush/clean temporal activity after Loader activity
+        flush_records(sync_run)
 
         ReverseEtl::Utils::BatchQuery.execute_in_batches(batch_query_params) do |records, current_offset|
           total_query_rows += records.count
@@ -30,7 +31,7 @@ module ReverseEtl
 
       private
 
-      def prepare_for_insertion(sync_run)
+      def flush_records(sync_run)
         SyncRecord.where(sync_id: sync_run.sync_id).delete_all
       end
 
@@ -48,6 +49,7 @@ module ReverseEtl
       end
 
       def build_sync_records_in_parallel(records, sync_run, model)
+        # TODO: Evaluate the necessity of parallel processing and benchmark the scenarios
         Parallel.map(records, in_threads: THREAD_COUNT) do |message|
           build_sync_record(message, sync_run, model)
         end.compact # Ensure to remove nil items potentially added due to primary key check or errors

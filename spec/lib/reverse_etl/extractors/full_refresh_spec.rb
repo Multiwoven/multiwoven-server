@@ -54,7 +54,7 @@ RSpec.describe ReverseEtl::Extractors::FullRefresh do
       it "performs a full refresh and updates the sync run" do
         expect(sync_run1).to have_state(:started)
         expect(subject).to receive(:heartbeat).once.with(activity)
-        expect(subject).to receive(:prepare_for_insertion)
+        expect(subject).to receive(:flush_records)
         expect(subject).not_to receive(:log_mismatch_error)
         subject.read(sync_run1.id, activity)
         sync_run1.reload
@@ -84,7 +84,7 @@ RSpec.describe ReverseEtl::Extractors::FullRefresh do
       end
     end
 
-    context "with invalid satate" do
+    context "with invalid state" do
       it "creates a new sync record" do
         expect(sync_run_pending).to have_state(:pending)
         expect(subject).not_to receive(:heartbeat)

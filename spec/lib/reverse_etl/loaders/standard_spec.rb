@@ -167,7 +167,7 @@ RSpec.describe ReverseEtl::Loaders::Standard do
       end
     end
 
-    context "full refresh clear record failed for individual" do
+    context "Full Refresh: Clearing Records Failure for Sync processing individual" do
       control = Multiwoven::Integrations::Protocol::ControlMessage.new(
         type: "full_refresh",
         emitted_at: Time.zone.now.to_i,
@@ -194,7 +194,7 @@ RSpec.describe ReverseEtl::Loaders::Standard do
       end
     end
 
-    context "full refresh clear record failed for batch" do
+    context "Full Refresh: Clearing Records Failure for Sync processing for batch" do
       control = Multiwoven::Integrations::Protocol::ControlMessage.new(
         type: "full_refresh",
         emitted_at: Time.zone.now.to_i,
