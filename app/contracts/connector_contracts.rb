@@ -95,7 +95,7 @@ module ConnectorContracts
       required(:id).filled(:integer)
       required(:query).filled(:string)
     end
-
+    # TODO: introduce query_type SOQL
     rule(:query) do
       # PgQuery.parse(value)
     rescue PgQuery::ParseError => e
