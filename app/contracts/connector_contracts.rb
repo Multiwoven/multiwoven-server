@@ -97,7 +97,7 @@ module ConnectorContracts
     end
 
     rule(:query) do
-      PgQuery.parse(value)
+      # PgQuery.parse(value)
     rescue PgQuery::ParseError => e
       key.failure("contains invalid SQL syntax: #{e.message}")
     end
