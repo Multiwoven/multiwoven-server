@@ -35,11 +35,11 @@ RSpec.describe Liquid::CustomFilters do
 
   describe ".to_datetime" do
     it "date format '%m/%d/%Y %H:%M'" do
-      expect(to_datetime("1/26/2024 9:20", '%m/%d/%Y %H:%M')).to eq("2024-01-26T09:20:00+00:00")
+      expect(to_datetime("1/26/2024 9:20", "%m/%d/%Y %H:%M")).to eq("2024-01-26T09:20:00+00:00")
     end
 
     it "date format '%m/%d/%Y %H:%M'" do
-      expect(to_datetime("1/26/2024 9:20 AM", '%m/%d/%Y %H:%M')).to eq("2024-01-26T09:20:00+00:00")
+      expect(to_datetime("1/26/2024 9:20 AM", "%m/%d/%Y %H:%M")).to eq("2024-01-26T09:20:00+00:00")
     end
   end
 end
